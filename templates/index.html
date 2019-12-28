@@ -35,6 +35,20 @@
         </div>
 
         <div class="col-sm-12 col-md-6">
+            <div class="text-center" id="resultsContainer">Results</div>
+
+            <div class="card shadow p-3 mb-5 bg-white rounded cardContainer">
+                <div class="card-header text-center">
+                    Nutrition Information (Per Serving)
+                </div>
+                <div class="card-body" id="cardResultBody">
+                    <table class="table">
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -67,10 +81,10 @@
             highlight: true, /* Enable substring highlighting */
             minLength: 1 /* Specify minimum characters required for showing suggestions */
         },
-        {
-            name: 'cereals',
-            source: cereal_menu_item_record_array
-        });
+            {
+                name: 'cereals',
+                source: cereal_menu_item_record_array
+            });
 
         // save all the manufacturer count record and convert the json format back to an array
         let cereal_item_manufacturer_count_array_format = JSON.parse('{{ cereal_item_manufacturer_count | tojson }}');
@@ -171,6 +185,38 @@
                     yAxes: [{ ticks: { mirror: true, fontColor: '#808080' } }]
                 }
             }
+        });
+
+        // Trigger this typeahead event when cereal name is being looked up
+        jQuery('#autocomplete-input').on('typeahead:selected typeahead:autocompleted', function (e, datum) {
+
+            jQuery.get('/query', { item: datum },
+                function (data) {
+                    if (data.cereal === "not found") {
+                        $("#cardResultBody").html("<div class='alert alert-info' role='alert'>No results found!</div>")
+                    }
+                    else {
+                        let table_body = document.querySelector('tbody');
+                        let table_header = Object.keys(data["cereal"][0]);
+                        let table_data = ""
+                        let data_units = ["cal", "g", "g", "g", "mg", "g", "mg", "g", "%"];
+
+                        for (let d = 0; d < Object.keys(data["cereal"][0]).length; d++) {
+
+                            if ((table_header[d]).includes("_")) {
+                                // replace "_" with a spacebar
+                                var formatted_table_header = table_header[d].replace(/_/g, " ");
+                            }
+                            else {
+                                var formatted_table_header = table_header[d];
+                            }
+
+                            table_data += `<tr><td>${formatted_table_header}</td><td>${data["cereal"][0][table_header[d]]}${data_units[d]}</td></tr>`;
+                        }
+
+                        table_body.innerHTML = table_data.replace(/\"/g, "");
+                    }
+                }, 'json')
         });
 
     })
