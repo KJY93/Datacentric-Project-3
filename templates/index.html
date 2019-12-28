@@ -24,11 +24,17 @@
 
     <div class="row">
         <div class="col-sm-12 col-md-6">
+            <div class="text-center" id="findOutMoreContainer">Find Out What's In Your Cereals</div>
 
+            <div class="card shadow p-3 mb-5 bg-white rounded cardContainer">
+                <div class="card-body">
+                    <input type="text" id="autocomplete-input" class="typeahead tt-query"
+                        placeholder="Enter cereal name..." autocomplete="off">
+                </div>
+            </div>
         </div>
 
         <div class="col-sm-12 col-md-6">
-
         </div>
     </div>
 </div>
@@ -46,6 +52,25 @@
         for (let k = 0; k < cereal_menu_item_record.length; k++) {
             cereal_menu_item_record_array.push(cereal_menu_item_record[k])
         };
+
+        // Constructing the suggestion engine
+        // Code modified from https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-typeahead.php
+        var cereal_menu_item_record_array = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: cereal_menu_item_record_array
+        });
+
+        // Initializing the typeahead
+        $('.typeahead').typeahead({
+            hint: true,
+            highlight: true, /* Enable substring highlighting */
+            minLength: 1 /* Specify minimum characters required for showing suggestions */
+        },
+        {
+            name: 'cereals',
+            source: cereal_menu_item_record_array
+        });
 
         // save all the manufacturer count record and convert the json format back to an array
         let cereal_item_manufacturer_count_array_format = JSON.parse('{{ cereal_item_manufacturer_count | tojson }}');
