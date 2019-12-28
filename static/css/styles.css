@@ -1,7 +1,74 @@
 body {
     font-family: 'Slackey', cursive, sans-serif;
+    font-size: 0.9em;
 }
 
 #navbar-brand-logo {
     color: #6c757d;
 }
+
+#cerealDivContainer, #cerealOverviewContainer {
+    margin-top: 20px;
+}
+
+#DoughnutChartWrapper, #barChartWrapper  {
+    min-height: 420px;
+    margin: 0 auto;
+}
+
+#findOutMoreContainer, #resultsContainer {
+    margin-top: 50px;
+}
+
+.cardContainer {
+    margin-top: 10px;
+}
+
+/* CSS style for autocomplete form from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=typeahead-with-local-dataset */
+.typeahead, .tt-query, .tt-hint {
+	border: 2px solid #CCCCCC;
+	border-radius: 8px;
+	font-size: 0.7em; /* Set input font size */
+	height: 40px;   
+	line-height: 30px;
+	outline: medium none;
+    padding: 8px 12px;
+}
+.typeahead {
+	background-color: #FFFFFF;
+}
+.typeahead:focus {
+	border: 2px solid #0097CF;
+}
+.tt-query {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.tt-hint {
+	color: #999999;
+}
+.tt-menu {
+	background-color: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 12px;
+}
+.tt-suggestion {
+	font-size: 0.7em;  /* Set suggestion dropdown font size */
+	padding: 3px 20px;
+}
+.tt-suggestion:hover {
+	cursor: pointer;
+	background-color: #0097CF;
+	color: #FFFFFF;
+}
+.tt-suggestion p {
+	margin: 0;
+}
+
+.tt-cursor {
+	background-color: #0097CF;    
+}
+
+/* https://exceptionshub.com/extending-the-width-of-bootstrap-typeahead-to-match-input-field.html */
+.twitter-typeahead, .tt-hint, .tt-input, .tt-menu { width: 100%; }
