@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %} Cereals 101 | Home {% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="text-center" id="cerealDivContainer">Cereal records in database: {{ cereal_record_count }}</div>
+
+    <div class="row">
+        <div class="col-sm-12" class="cerealOverviewContainer">
+            <div id="DoughnutChartWrapper">
+                <canvas id="doughnut-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6" class="menuOverviewContainer">
+            <div id="barChartWrapper">
+                <canvas id="bar-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+
+        </div>
+
+        <div class="col-sm-12 col-md-6">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        // save all cereals item record 
+        // convert variable passed to flask template to json format and parse it to get an array
+        var cereal_menu_item_record = JSON.parse('{{ cereal_menu_item | tojson }}');
+
+        // declare an empty variable to save all the JSON formatted data above into an array
+        var cereal_menu_item_record_array = [];
+
+        for (let k = 0; k < cereal_menu_item_record.length; k++) {
+            cereal_menu_item_record_array.push(cereal_menu_item_record[k])
+        };
+
+        // save all the manufacturer count record and convert the json format back to an array
+        let cereal_item_manufacturer_count_array_format = JSON.parse('{{ cereal_item_manufacturer_count | tojson }}');
+        let manufacturer_array = [];
+        let cereal_item_count_array = [];
+
+        // loop through the menu item count array and save the respective categories and counts to its variable
+        for (let i = 0; i < cereal_item_manufacturer_count_array_format.length; i++) {
+            manufacturer_array.push(cereal_item_manufacturer_count_array_format[i]['manufacturer_description'])
+            cereal_item_count_array.push(cereal_item_manufacturer_count_array_format[i]['count'])
+        };
+
+        // Generate random colors that are distinguishable from each other (using hsla)
+        // https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html
+        let color_code_array = [];
+
+        // Represents how many color will be generated
+        // This will be based on how many items are there in the manufacturer category
+        let color_quantity = manufacturer_array.length;
+        let hue_delta = Math.trunc(360 / color_quantity);
+
+        // set the saturation, alpha and lightness value to be constant
+        let lightness = 50;
+        let saturation = 100;
+        let alpha = 1;
+
+        for (let j = 0; j < color_quantity; j++) {
+            let hue = j * hue_delta;
+            color_code_array.push(`hsla(${hue},${saturation}%,${lightness}%,${alpha})`)
+        };
+
+        // Doughnut Chart
+        new Chart(document.getElementById("doughnut-chart"), {
+            type: 'doughnut',
+            data: {
+                labels: manufacturer_array,
+                datasets: [
+                    {
+                        label: "Menu category (unit)",
+                        backgroundColor: color_code_array,
+                        data: cereal_item_count_array
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    labels: {
+                        render: 'value',
+                        arc: true,
+                        fontColor: '#808080',
+                        fontStyle: 'bold',
+                        position: 'outside'
+                    }
+                },
+
+                title: {
+                    display: true,
+                    text: 'Cereal breakdown by manufacturer overview'
+                }
+            }
+        });
+    })
+</script>
+
+{% endblock %}
