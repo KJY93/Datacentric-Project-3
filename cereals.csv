@@ -1,9 +1,9 @@
-name,manufacturer_id,type_id,calories,protein,fat,sodium,fiber,carbohyrates,sugars,potassium,vitamins,ratings,review_count
+name,manufacturer_id,type_id,calories,protein,fat,sodium,fiber,carbohydrates,sugars,potassium,vitamins,ratings,review_count
 100% Bran,4,1,70,4,1,130,10,5,6,280,25,68.402973,2000
 100% Natural Bran,6,2,120,3,5,15,2,8,8,135,0,33.983679,2000
 All-Bran,3,1,70,4,1,260,9,7,5,320,25,59.425505,2000
 All-Bran with Extra Fiber,3,1,50,4,0,140,14,8,0,330,25,93.704912,2000
-Almond Delight,7,1,110,2,2,200,1,14,8,-1,25,34.384843,2000
+Almond Delight,7,1,110,2,2,200,1,14,8,22,25,34.384843,2000
 Apple Cinnamon Cheerios,2,1,110,2,2,180,1.5,10.5,10,70,25,29.509541,2000
 Apple Jacks,3,1,110,2,0,125,1,11,14,30,25,33.174094,2000
 Basic 4,2,1,130,3,2,210,2,18,8,100,25,37.038562,2000
@@ -19,7 +19,7 @@ Corn Flakes,3,1,100,2,0,290,1,21,2,35,25,45.863324,2000
 Corn Pops,3,1,110,1,0,90,1,13,12,20,25,35.782791,2000
 Count Chocula,2,1,110,1,1,180,0,12,13,65,25,22.396513,2000
 Cracklin Oat Bran,3,1,110,3,3,140,4,10,7,160,25,40.448772,2000
-Cream of Wheat (Quick),4,2,100,3,0,80,1,21,0,-1,0,64.533816,2000
+Cream of Wheat (Quick),4,2,100,3,0,80,1,21,0,24,0,64.533816,2000
 Crispix,3,1,110,2,0,220,1,21,3,30,25,46.895644,2000
 Crispy Wheat & Raisins,2,1,100,2,1,140,2,11,10,120,25,36.176196,2000
 Double Chex,7,1,100,2,0,190,1,18,5,80,25,44.330856,2000
