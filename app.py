@@ -113,6 +113,22 @@ def login():
             return redirect(url_for('register'))
     else:
         return render_template("login.html")
+    
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        hash_password = generate_password_hash(password)
+        sql_query = f"INSERT INTO Users (name, password) VALUES ('{username}', '{hash_password}')"
+
+        cursor = mysql.connection.cursor()
+        cursor.execute(sql_query)
+        mysql.connection.commit()
+        flash("Registration is succesful. Please login.")
+        return redirect(url_for('login'))
+    else:
+        return render_template("register.html")
         
 @app.route('/query', methods=["GET"])
 def query():
