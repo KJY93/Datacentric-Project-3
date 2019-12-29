@@ -74,6 +74,46 @@ def index():
         # else:
         # return 'YAY'
         
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    
+    # this one will not show flash
+    session.clear()
+    
+    if request.method == "POST":
+        # Ensure username is submitted
+        if not request.form.get("username"):
+            return render_template("error.html", message="Error message: Username field is empty. Please complete all the fields before logging in.")
+
+        # Ensure password is submitted
+        if not request.form.get("password"):
+            return render_template("error.html", message="Error message: Password field is empty. Please complete all the fields before logging in.")
+
+        # Query database for username
+        name = request.form.get("username")
+        
+        cursor = mysql.connection.cursor()
+    
+        cursor.execute('''SELECT user_id, name, password FROM Users WHERE name=''' + "\'" + name + "\'")
+        
+        user_login = cursor.fetchone()
+                        
+        if len(user_login) !=0:
+            password = request.form.get("password")
+            if check_password_hash(user_login["password"], password):
+                flash("You have successfully login.")
+                session["user"] = user_login["name"]
+                session["user_id"] = user_login["user_id"]
+                return redirect(url_for('index'))
+            else:
+                flash("Invalid password. Please try again.")
+                return redirect(url_for('login'))
+        else:
+            flash('Username does not exist. Please register.')
+            return redirect(url_for('register'))
+    else:
+        return render_template("login.html")
+        
 @app.route('/query', methods=["GET"])
 def query():
     
