@@ -24,6 +24,11 @@ body {
     margin-top: 10px;
 }
 
+#searchFormContainer {
+	display: flex;
+	justify-content: center;
+}
+
 /* CSS style for autocomplete form from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=typeahead-with-local-dataset */
 .typeahead, .tt-query, .tt-hint {
 	border: 2px solid #CCCCCC;
