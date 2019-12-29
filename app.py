@@ -29,8 +29,8 @@ mysql = MySQL(app)
 # Index Page
 @app.route('/', methods=["GET", "POST"])
 def index():
-        # if request.method == "POST":
-            # Query for all the cereal items in the Cereals table   
+    if "user" in session:
+        # Query for all the cereal items in the Cereals table
         cursor = mysql.connection.cursor()
 
         cursor.execute(('''SELECT Cereals.name, manufacturer_description, Type.cereals_type,
@@ -71,8 +71,8 @@ def index():
 
         return render_template('index.html', cereal_menu_item=cereal_menu_item, manufacturer_category_description_array=manufacturer_category_description_array, col_headers=col_headers, cereals_menu=cereals_menu, cereal_item_manufacturer_count=cereal_item_manufacturer_count, cereal_record_count=cereal_record_count)
     
-        # else:
-        # return 'YAY'
+    else:
+        return render_template("login.html")
         
 @app.route("/login", methods=["GET", "POST"])
 def login():
