@@ -67,6 +67,9 @@
             cereal_menu_item_record_array.push(cereal_menu_item_record[k])
         };
 
+        // save cereal list to localStorge 
+        localStorage.setItem("cereal_list", JSON.stringify(cereal_menu_item_record_array));
+
         // Constructing the suggestion engine
         // Code modified from https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-typeahead.php
         var cereal_menu_item_record_array = new Bloodhound({
