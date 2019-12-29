@@ -57,12 +57,14 @@
     
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
-                <a class="nav-item nav-link" href="#">Rate</a>
-                <a class="nav-item nav-link" href="#">History</a>
-            </div>
-    
-            <div class="navbar-nav ml-auto">
-                <button type="button" class="btn btn-outline-secondary"><i class="fas fa-map-marker-alt"></i></button>
+                {% if session.user_id %}
+                    <a class="nav-item nav-link" href="/search">Search</a>
+                    <a class="nav-item nav-link" href="#">History</a>
+                    <a class="nav-item nav-link" href="/logout">Log Out</a>
+                {% else %}
+                    <a class="nav-item nav-link" href="/register">Register</a>
+                    <a class="nav-item nav-link" href="/login">Log In</a>
+                {% endif %}
             </div>
         </div>
     </nav>
