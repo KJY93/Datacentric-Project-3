@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %} Cereals 101 | Login {% endblock %}
+
+{% block content %}
+    <div class="loginAndRegisterFormContainer">
+        <form action="/login" method="post">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text" required>
+            </div>
+
+            <div class="form-group">
+                <input class="form-control" name="password" placeholder="Password" type="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-outline-secondary">Login</button>
+        </form>	
+    </div>
+{% endblock %}
