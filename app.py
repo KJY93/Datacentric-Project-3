@@ -171,5 +171,15 @@ def query():
     
     return jsonify({"cereal":cereal})
 
+@app.route("/logout")
+def logout():
+    if "user" in session:
+        session.clear()
+        flash("You have successfully logout.")
+        return redirect(url_for('login'))
+    else:
+        flash("Please login first.")
+        return redirect(url_for('login'))
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
