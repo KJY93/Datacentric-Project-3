@@ -129,6 +129,33 @@ def register():
         return redirect(url_for('login'))
     else:
         return render_template("register.html")
+    
+@app.route("/validate", methods=["GET"]) 
+def validate():
+    """Return true if username available, else false, in JSON format"""
+    
+    username = request.args.get('username')
+    
+    if username == "":
+        return jsonify({"status":""})
+
+    # check whether if the username contains "" or ' at the start and end of string
+    # if yes, prompt the user to choose another username
+    if ((username.startswith("\'")) or (username.startswith("\"")) or (username.endswith("\"")) or (username.endswith("\'"))
+    or (username.startswith("\'") and username.endswith("\'")) or (username.startswith("\"") and username.endswith("\"")) 
+    or (username.startswith("\'") and username.endswith("\"")) or (username.startswith("\"") and username.endswith("\'"))):
+        return jsonify({"status":"invalid"})
+    
+    else:
+        # Query database to check whether username exist
+        cursor = mysql.connection.cursor()
+        cursor.execute('''SELECT user_id, name, password FROM Users WHERE name=''' + "\'" + username + "\'")
+        validate_user = cursor.fetchone()
+            
+        if validate_user:
+            return jsonify({"status":"taken"})
+        else:
+            return jsonify({"status":"available"})
         
 @app.route('/query', methods=["GET"])
 def query():
