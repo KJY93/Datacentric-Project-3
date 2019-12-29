@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %} Cereals 101 | Search {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div id="searchFormContainer">
+        <div class="w-50 card shadow p-3 mb-5 bg-white rounded cardContainer">
+            <div class="card-header text-center">
+                Choose one of the following to begin your search:
+            </div>  
+            
+            <div class="card-body">
+                <!-- need to commit this not done yet -->
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+
+                        <form>
+                            <div class="form-group">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="manufacturer" name="selectOption" class="custom-control-input" value="manufacturer">
+                                    <label class="custom-control-label" for="manufacturer">Manufacturer</label>
+                                </div>
+
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="cereal_type" name="selectOption" class="custom-control-input" value="cereal_type">
+                                    <label class="custom-control-label" for="cereal_type">Cereal Type</label>
+                                </div>
+
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="cereal_name" name="selectOption" class="custom-control-input" value="cereal_name">
+                                    <label class="custom-control-label" for="cereal_name">Cereal Name</label>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div id="selectOptionSearchField">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../static/scripts/script.js"></script>
+{% endblock %}
