@@ -76,10 +76,7 @@ def index():
         
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    
-    # this one will not show flash
-    session.clear()
-    
+
     if request.method == "POST":
         # Ensure username is submitted
         if not request.form.get("username"):
