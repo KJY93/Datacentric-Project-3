@@ -11,11 +11,10 @@
             </div>  
             
             <div class="card-body">
-                <!-- need to commit this not done yet -->
                 <div class="row">
                     <div class="col-sm-12 text-center">
 
-                        <form>
+                        <form action="/search" method="post">
                             <div class="form-group">
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" id="manufacturer" name="selectOption" class="custom-control-input" value="manufacturer">
@@ -31,13 +30,13 @@
                                     <input type="radio" id="cereal_name" name="selectOption" class="custom-control-input" value="cereal_name">
                                     <label class="custom-control-label" for="cereal_name">Cereal Name</label>
                                 </div>
+
+                                <div id="selectOptionSearchField">
+
+                                </div>
+        
                             </div>
                         </form>
-
-                        <div id="selectOptionSearchField">
-
-                        </div>
-
                     </div>
                 </div>
             </div>
