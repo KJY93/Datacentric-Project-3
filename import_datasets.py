@@ -67,7 +67,7 @@ def main():
 
                             row_count = row_count
                             
-                    elif ((file_list[i] == 'users.csv') or (file_list[i] == 'type.csv') or (file_list[i] == 'manufacturer.csv')):
+                    elif ((file_list[i] == 'type.csv') or (file_list[i] == 'manufacturer.csv')):
                         
                         # loop through the rest of the rows
                         for row in csv_reader:
@@ -94,6 +94,24 @@ def main():
                             row_count = row_count + 1   
                                      
                             values = f"('{row[0]}', '{row[1]}', '{row[2]}');"
+                            
+                            # get the full sql query stateement
+                            sql_query = sql + values
+                        
+                            # execute the query
+                            cursor.execute(sql_query)
+
+                            row_count = row_count
+                            
+                    # commit this
+                    elif ((file_list[i] == 'users.csv')):
+                        # loop through the rest of the rows
+                        for row in csv_reader:
+                            
+                            # initialize a row count variable to keep track of the number of rows in the csv file
+                            row_count = row_count + 1   
+                                     
+                            values = f"('{row[0]}', '{row[1]}');"
                             
                             # get the full sql query stateement
                             sql_query = sql + values
