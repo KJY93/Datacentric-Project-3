@@ -26,7 +26,11 @@ body {
 
 #searchFormContainer {
 	display: flex;
-	justify-content: center;
+	justify-content: center;	
+}
+
+#selectOptionSearchField {
+	margin-top: 20px;
 }
 
 /* CSS style for autocomplete form from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=typeahead-with-local-dataset */
