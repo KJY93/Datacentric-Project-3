@@ -16,7 +16,7 @@ db_name = 'sql12317054'
 # declare a list containing all the create table sql syntax
 sql = [
     
-'''CREATE TABLE Users (user_id INTEGER AUTO_INCREMENT PRIMARY KEY, name varchar(255) NOT NULL UNIQUE);''',
+'''CREATE TABLE Users (user_id INTEGER AUTO_INCREMENT PRIMARY KEY, name varchar(255) NOT NULL UNIQUE, password varchar(255) NOT NULL);''',
     
 '''CREATE TABLE Manufacturer (manufacturer_id INTEGER AUTO_INCREMENT PRIMARY KEY, manufacturer_description varchar(100) NOT NULL UNIQUE);''',
 
