@@ -39,4 +39,25 @@ $(document).ready(function () {
             $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
         }
     })
+
+    // if cereal type is selected
+    $("#cereal_type").click(function () {
+        if (document.getElementById("cereal_type").hasAttribute("checked") === false) {
+
+            $("#cereal_type").attr("checked", "checked");
+            $("#manufacturer").removeAttr("checked");
+            $("#cereal_name").removeAttr("checked");
+            $("#selectOptionSearchField").empty();
+
+            $("#selectOptionSearchField").append(`<select class="custom-select" id="cereal_type_selection" name="cereal_type_selection" required></select>`);
+            $("#cereal_type_selection").append('<option value="" selected disabled hidden>Choose...</option>');
+            let cereal_type_list = ["Hot", "Cold"];
+            for (let i = 0; i < cereal_type_list.length; i++) {
+                $("#cereal_type_selection").append(`<option value="${cereal_type_list[i]}">${cereal_type_list[i]}</option>`);
+            }
+
+            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
+        }
+    })
+
 })
