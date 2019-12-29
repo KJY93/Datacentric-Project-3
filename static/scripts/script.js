@@ -60,4 +60,41 @@ $(document).ready(function () {
         }
     })
 
+    // if cereal name is selected
+    $("#cereal_name").click(function () {
+        if (document.getElementById("cereal_name").hasAttribute("cereal_name") === false) {
+            $("#cereal_name").attr("checked", "checked");
+            // commit this
+            $("#manufacturer").removeAttr("checked");
+            $("#cereal_type").removeAttr("checked");
+            $("#selectOptionSearchField").empty();
+
+            $("#selectOptionSearchField").append(`<input type="text" id="cereal-name-input" name="cereal-name-input" class="typeahead tt-query" placeholder="Enter cereal name..." autocomplete="off" required>`);
+
+            // Constructing the suggestion engine
+            // Code modified from https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-typeahead.php
+            // Get cereal list from localStorage
+            var cereal_array = JSON.parse(localStorage.getItem("cereal_list"));
+            
+            var cereal_array = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: cereal_array
+            });
+
+            // Initializing the typeahead
+            $('.typeahead').typeahead({
+                hint: true,
+                highlight: true, /* Enable substring highlighting */
+                minLength: 1 /* Specify minimum characters required for showing suggestions */
+            },
+            {
+                name: 'cereals',
+                source: cereal_array
+            });
+
+            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
+        }
+    })
+
 })
