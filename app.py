@@ -1,4 +1,5 @@
 import os
+import re 
 
 from flask import Flask, session, request, redirect, render_template, url_for, flash, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -28,51 +29,51 @@ mysql = MySQL(app)
 # Index Page
 @app.route('/', methods=["GET", "POST"])
 def index():
-    # if request.method == "POST":
-        # Query for all the cereal items in the Cereals table
-    cursor = mysql.connection.cursor()
+        # if request.method == "POST":
+            # Query for all the cereal items in the Cereals table   
+        cursor = mysql.connection.cursor()
 
-    cursor.execute(('''SELECT Cereals.name, manufacturer_description, Type.cereals_type,
-            Cereals.protein, Cereals.fat, Cereals.sodium, Cereals.fiber, Cereals.carbohydrates, Cereals.sugars,
-            Cereals.potassium, Cereals.vitamins, Cereals.ratings FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
-            Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id ORDER BY Cereals.ratings DESC'''))
+        cursor.execute(('''SELECT Cereals.name, manufacturer_description, Type.cereals_type,
+                Cereals.protein, Cereals.fat, Cereals.sodium, Cereals.fiber, Cereals.carbohydrates, Cereals.sugars,
+                Cereals.potassium, Cereals.vitamins, Cereals.ratings FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
+                Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id ORDER BY Cereals.ratings DESC'''))
 
-    cereals_menu = cursor.fetchall()
+        cereals_menu = cursor.fetchall()
 
-    # declare an empty variable to store all the cereals item
-    cereal_menu_item = []
-    
-    for i in range(len(cereals_menu)):
-        cereal_menu_item.append(cereals_menu[i]['name'])
+        # declare an empty variable to store all the cereals item
+        cereal_menu_item = []
+        
+        for i in range(len(cereals_menu)):
+            cereal_menu_item.append(cereals_menu[i]['name'])
 
-    # record the number of rows in the cereals table
-    cereal_record_count = len(cereals_menu)
-    
-    # loop through the first row of record returned from the database to get the column headers
-    col_headers = cereals_menu[0].keys()
-    
-    # Count all rows for a particular manufacturer category
-    cursor.execute('''SELECT Manufacturer.manufacturer_description, COUNT(*) as count FROM Cereals INNER JOIN Manufacturer ON
-                   Cereals.manufacturer_id = Manufacturer.manufacturer_id GROUP BY Cereals.manufacturer_id''')
-     
-    cereal_item_manufacturer_count = cursor.fetchall()
-    
-    # Get all the manufacturer
-    cursor.execute('''SELECT manufacturer_description FROM Manufacturer''')
-    
-    manufacturer_category_description = cursor.fetchall()
-    
-    # declare an empty variable to store the manufacturers
-    manufacturer_category_description_array = []
-    
-    for j in manufacturer_category_description:
-        manufacturer_category_description_array.append(j['manufacturer_description'])
+        # record the number of rows in the cereals table
+        cereal_record_count = len(cereals_menu)
+        
+        # loop through the first row of record returned from the database to get the column headers
+        col_headers = cereals_menu[0].keys()
+        
+        # Count all rows for a particular manufacturer category
+        cursor.execute('''SELECT Manufacturer.manufacturer_description, COUNT(*) as count FROM Cereals INNER JOIN Manufacturer ON
+                    Cereals.manufacturer_id = Manufacturer.manufacturer_id GROUP BY Cereals.manufacturer_id''')
+        
+        cereal_item_manufacturer_count = cursor.fetchall()
+        
+        # Get all the manufacturer
+        cursor.execute('''SELECT manufacturer_description FROM Manufacturer''')
+        
+        manufacturer_category_description = cursor.fetchall()
+        
+        # declare an empty variable to store the manufacturers
+        manufacturer_category_description_array = []
+        
+        for j in manufacturer_category_description:
+            manufacturer_category_description_array.append(j['manufacturer_description'])
 
-    return render_template('index.html', cereal_menu_item=cereal_menu_item, manufacturer_category_description_array=manufacturer_category_description_array, col_headers=col_headers, cereals_menu=cereals_menu, cereal_item_manufacturer_count=cereal_item_manufacturer_count, cereal_record_count=cereal_record_count)
+        return render_template('index.html', cereal_menu_item=cereal_menu_item, manufacturer_category_description_array=manufacturer_category_description_array, col_headers=col_headers, cereals_menu=cereals_menu, cereal_item_manufacturer_count=cereal_item_manufacturer_count, cereal_record_count=cereal_record_count)
     
-    # else:
-    # return 'YAY'
-    
+        # else:
+        # return 'YAY'
+        
 @app.route('/query', methods=["GET"])
 def query():
     
