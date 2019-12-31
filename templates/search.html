@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container-fluid">
     <div id="searchFormContainer">
-        <div class="w-50 card shadow p-3 mb-5 bg-white rounded cardContainer">
+        <div class="w-75 card shadow p-3 mb-5 bg-white rounded cardContainer">
             <div class="card-header text-center">
                 Choose one of the following to begin your search:
             </div>  
@@ -13,7 +13,6 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-12 text-center">
-
                         <form action="/search" method="post">
                             <div class="form-group">
                                 <div class="custom-control custom-radio custom-control-inline">
@@ -29,6 +28,11 @@
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" id="cereal_name" name="selectOption" class="custom-control-input" value="cereal_name">
                                     <label class="custom-control-label" for="cereal_name">Cereal Name</label>
+                                </div>
+
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="calories" name="selectOption" class="custom-control-input" value="calories">
+                                    <label class="custom-control-label" for="calories">Calories</label>
                                 </div>
 
                                 <div id="selectOptionSearchField">
