@@ -31,7 +31,9 @@ $(document).ready(function () {
 
             $("#selectOptionSearchField").append(`<select class="custom-select" id="manufacturer_selection" name="manufacturer_selection" required></select>`);
             $("#manufacturer_selection").append('<option value="" selected disabled hidden>Choose...</option>');
-            let manufacturer_list = ["American Home Food Products", "General Mills", "Kelloggs", "Nabisco", "Post", "Quacker Oats", "Ralston Purina"];
+
+            let manufacturer_list = JSON.parse(localStorage.getItem("manufacturer_list"));
+
             for (let i = 0; i < manufacturer_list.length; i++) {
                 $("#manufacturer_selection").append(`<option value="${manufacturer_list[i]}">${manufacturer_list[i]}</option>`);
             }
