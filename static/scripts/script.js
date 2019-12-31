@@ -5,10 +5,10 @@ $(document).ready(function () {
 
     function cardElementDimension(e) {
         if (e.matches) {
-            $(".card").removeClass("w-50");
+            $(".card").removeClass("w-75");
         }
         else {
-            $(".card").addClass("w-50");
+            $(".card").addClass("w-75");
         }
     }
 
@@ -24,7 +24,6 @@ $(document).ready(function () {
         if (document.getElementById("manufacturer").hasAttribute("checked") === false) {
 
             $("#manufacturer").attr("checked", "checked");
-            // commit this
             $("#cereal_type").removeAttr("checked");
             $("#cereal_name").removeAttr("checked");
             $("#selectOptionSearchField").empty();
@@ -64,7 +63,6 @@ $(document).ready(function () {
     $("#cereal_name").click(function () {
         if (document.getElementById("cereal_name").hasAttribute("cereal_name") === false) {
             $("#cereal_name").attr("checked", "checked");
-            // commit this
             $("#manufacturer").removeAttr("checked");
             $("#cereal_type").removeAttr("checked");
             $("#selectOptionSearchField").empty();
