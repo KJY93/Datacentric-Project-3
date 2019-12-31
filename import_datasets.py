@@ -58,7 +58,7 @@ def main():
                             # initialize a row count variable to keep track of the number of rows in the csv file
                             row_count = row_count + 1
 
-                            values = f"('{row[0]}', {row[1]}, {row[2]}, {row[3]}, {row[4]}, {row[5]}, {row[6]}, {row[7]}, {row[8]}, {row[9]}, {row[10]}, {row[11]}, {row[12]});"
+                            values = f"('{row[0]}', {row[1]}, {row[2]}, {row[3]}, {row[4]}, {row[5]}, {row[6]}, {row[7]}, {row[8]}, {row[9]}, {row[10]}, {row[11]});"
                             
                             # get the full sql query stateement
                             sql_query = sql + values
