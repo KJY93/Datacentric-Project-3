@@ -52,12 +52,15 @@ body {
     text-align: center;
 }
 
+#record {
+	margin-top: 20px;
+}
 
 /* CSS style for autocomplete form from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=typeahead-with-local-dataset */
 .typeahead, .tt-query, .tt-hint {
 	border: 2px solid #CCCCCC;
 	border-radius: 8px;
-	font-size: 0.7em; /* Set input font size */
+	font-size: 0.8em; /* Set input font size */ 
 	height: 40px;   
 	line-height: 30px;
 	outline: medium none;
@@ -83,7 +86,7 @@ body {
     margin-top: 12px;
 }
 .tt-suggestion {
-	font-size: 0.7em;  /* Set suggestion dropdown font size */
+	font-size: 0.8em;  /* Set suggestion dropdown font size */ 
 	padding: 3px 20px;
 }
 .tt-suggestion:hover {
@@ -101,3 +104,13 @@ body {
 
 /* https://exceptionshub.com/extending-the-width-of-bootstrap-typeahead-to-match-input-field.html */
 .twitter-typeahead, .tt-hint, .tt-input, .tt-menu { width: 100%; }
+
+@media (max-width: 575.98px) { 
+	body, #searchButton, #selectOptionSearchField select {
+		font-size: 0.7em;
+	}
+
+	.typeahead, .tt-query, .tt-hint {
+		height: 27px;
+	}
+}
