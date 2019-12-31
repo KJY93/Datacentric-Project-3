@@ -70,6 +70,10 @@
         // save cereal list to localStorge 
         localStorage.setItem("cereal_list", JSON.stringify(cereal_menu_item_record_array));
 
+        // to commit 311219 1041pm record
+        let manufacturer_list_array = JSON.parse('{{ manufacturer_category_description_array | tojson }}')
+        localStorage.setItem("manufacturer_list", JSON.stringify(manufacturer_list_array))
+
         // Constructing the suggestion engine
         // Code modified from https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-typeahead.php
         var cereal_menu_item_record_array = new Bloodhound({
