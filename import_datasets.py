@@ -15,7 +15,7 @@ password = 'i4HZtC2C6y'
 db_name = 'sql12317054'
 
 # declare a list to keep the csv file
-file_list = ['users.csv', 'manufacturer.csv', 'type.csv', 'ratings.csv', 'cereals.csv']
+file_list = ['users.csv', 'manufacturer.csv', 'type.csv', 'ratings.csv', 'cereals.csv', 'contribute.csv']
 
 def main():
     try:
@@ -25,6 +25,7 @@ def main():
             connection = pymysql.connect(host=hostname, user=username, password=password, db=db_name)
             
             # declare cursor object
+            
             cursor = connection.cursor()
 
         except pymysql.MySQLError as e:
@@ -57,7 +58,7 @@ def main():
                             # initialize a row count variable to keep track of the number of rows in the csv file
                             row_count = row_count + 1
 
-                            values = f"('{row[0]}', '{row[1]}', {row[2]}, {row[3]}, {row[4]}, {row[5]}, {row[6]}, {row[7]}, {row[8]}, {row[9]}, {row[10]}, {row[11]}, {row[12]}, {row[13]});"
+                            values = f"('{row[0]}', {row[1]}, {row[2]}, {row[3]}, {row[4]}, {row[5]}, {row[6]}, {row[7]}, {row[8]}, {row[9]}, {row[10]}, {row[11]}, {row[12]});"
                             
                             # get the full sql query stateement
                             sql_query = sql + values
@@ -84,7 +85,7 @@ def main():
                             cursor.execute(sql_query)
 
                             row_count = row_count
-                        
+                            
                     elif (file_list[i] == 'ratings.csv'):
                         
                         # loop through the rest of the rows
@@ -93,7 +94,7 @@ def main():
                             # initialize a row count variable to keep track of the number of rows in the csv file
                             row_count = row_count + 1   
                                      
-                            values = f"('{row[0]}', '{row[1]}', '{row[2]}');"
+                            values = f"({row[0]}, '{row[1]}', {row[2]}, {row[3]});"
                             
                             # get the full sql query stateement
                             sql_query = sql + values
@@ -102,8 +103,7 @@ def main():
                             cursor.execute(sql_query)
 
                             row_count = row_count
-                            
-                    # commit this
+
                     elif ((file_list[i] == 'users.csv')):
                         # loop through the rest of the rows
                         for row in csv_reader:
@@ -120,8 +120,24 @@ def main():
                             cursor.execute(sql_query)
 
                             row_count = row_count
-                        
+        
+                    elif ((file_list[i] == 'contribute.csv')):
+                        # loop through the rest of the rows
+                        for row in csv_reader:
                             
+                            # initialize a row count variable to keep track of the number of rows in the csv file
+                            row_count = row_count + 1   
+                                     
+                            values = f"({row[0]}, {row[1]}, {row[2]});"
+                            
+                            # get the full sql query stateement
+                            sql_query = sql + values
+                        
+                            # execute the query
+                            cursor.execute(sql_query)
+
+                            row_count = row_count
+                        
                 # commit all the rows to the respective tables in the database
                 connection.commit()
                 print(f"{row_count} rows are added to the {file_list[i].split('.')[0].capitalize()} table.")
