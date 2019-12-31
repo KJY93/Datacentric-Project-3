@@ -94,8 +94,12 @@ def login():
         cursor.execute('''SELECT user_id, name, password FROM Users WHERE name=''' + "\'" + name + "\'")
         
         user_login = cursor.fetchone()
-                        
-        if len(user_login) !=0:
+                
+        if user_login == None:
+            flash("Username does not exist. Please register.")
+            return redirect(url_for('register'))
+              
+        elif len(user_login) !=0:
             password = request.form.get("password")
             if check_password_hash(user_login["password"], password):
                 flash("You have successfully login.")
@@ -105,9 +109,6 @@ def login():
             else:
                 flash("Invalid password. Please try again.")
                 return redirect(url_for('login'))
-        else:
-            flash('Username does not exist. Please register.')
-            return redirect(url_for('register'))
     else:
         return render_template("login.html")
     
@@ -167,6 +168,41 @@ def query():
     cereal = cursor.fetchall();
     
     return jsonify({"cereal":cereal})
+
+@app.route('/search', methods=["GET", "POST"])
+def search():
+    if "user" in session:
+        if request.method == "POST":
+            
+            cursor = mysql.connection.cursor()
+            
+            selectedOption = request.form.get('selectOption')
+            
+            if selectedOption == "manufacturer":
+                manufacturer_name = request.form.get('manufacturer_selection')
+                cursor.execute('''SELECT Cereals.name, Cereals.calories, Manufacturer.manufacturer_description, Type.cereals_type FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
+                    Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE Manufacturer.manufacturer_description=''' + "\'" + manufacturer_name + "\'")
+                        
+            elif selectedOption == "cereal_type":
+                cereal_type = request.form.get("cereal_type_selection")
+                cursor.execute('''SELECT Cereals.name, Cereals.calories, Manufacturer.manufacturer_description, Type.cereals_type FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
+                    Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE Type.cereals_type=''' + "\'" + cereal_type + "\'")
+                
+            elif selectedOption == "cereal_name":
+                cereal_name = request.form.get("cereal-name-input")
+                cursor.execute('''SELECT Cereals.name, Cereals.calories, Manufacturer.manufacturer_description, Type.cereals_type FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
+                    Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE Cereals.name=''' + "\'" + cereal_name + "\'")
+
+            filtered_record = cursor.fetchall()
+            
+            row_return = len(filtered_record)
+            
+            return render_template("list.html", row_return=row_return, filtered_record=filtered_record)
+        else:
+            return render_template('search.html')
+    else:
+        flash("Please login first.")
+        return redirect(url_for('login'))
 
 @app.route("/logout")
 def logout():
