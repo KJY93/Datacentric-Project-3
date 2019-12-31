@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %} Cereals 101 | Results {% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+
+        {% if row_return !=0 %}
+            <p id="record" class="text-center"><strong>Records found: {{ row_return }} </strong></p>
+            <table id="dtBasicExample" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                <!-- create the table header -->
+                <thead>
+                    <tr>
+                        <th>Index No</th>
+                        <th>Cereal Name</th>
+                        <th>Manufacturer</th>
+                        <th>Cereal Type</th>
+                        <th>Calories</th>
+                    </tr>
+                </thead>
+
+                <!-- display all the table rows -->
+                <tbody>
+                    {% for i in range(filtered_record|length) %}
+                    <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td><a href="#">{{ filtered_record[i]["name"] }}</a></td>
+                        <td>{{ filtered_record[i]["manufacturer_description"] }}</td>
+                        <td>{{ filtered_record[i]["cereals_type"] }}</td>
+                        <td>{{ filtered_record[i]["calories"] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No records found.</p>
+        {% endif %}
+
+    </div>
+
+	<script>
+		$(document).ready( function () {
+            $.fn.DataTable.ext.pager.numbers_length =5;
+		    $("#dtBasicExample").DataTable();
+		} );
+    </script>
+
+{% endblock %}
