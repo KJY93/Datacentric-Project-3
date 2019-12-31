@@ -26,6 +26,7 @@ $(document).ready(function () {
             $("#manufacturer").attr("checked", "checked");
             $("#cereal_type").removeAttr("checked");
             $("#cereal_name").removeAttr("checked");
+            $("#calories").removeAttr("checked");
             $("#selectOptionSearchField").empty();
 
             $("#selectOptionSearchField").append(`<select class="custom-select" id="manufacturer_selection" name="manufacturer_selection" required></select>`);
@@ -46,6 +47,7 @@ $(document).ready(function () {
             $("#cereal_type").attr("checked", "checked");
             $("#manufacturer").removeAttr("checked");
             $("#cereal_name").removeAttr("checked");
+            $("#calories").removeAttr("checked");
             $("#selectOptionSearchField").empty();
 
             $("#selectOptionSearchField").append(`<select class="custom-select" id="cereal_type_selection" name="cereal_type_selection" required></select>`);
@@ -65,6 +67,7 @@ $(document).ready(function () {
             $("#cereal_name").attr("checked", "checked");
             $("#manufacturer").removeAttr("checked");
             $("#cereal_type").removeAttr("checked");
+            $("#calories").removeAttr("checked");
             $("#selectOptionSearchField").empty();
 
             $("#selectOptionSearchField").append(`<input type="text" id="cereal-name-input" name="cereal-name-input" class="typeahead tt-query" placeholder="Enter cereal name..." autocomplete="off" required>`);
@@ -94,5 +97,27 @@ $(document).ready(function () {
             $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
         }
     })
+
+    // if calories is selected
+    $("#calories").click(function () {
+        if (document.getElementById("calories").hasAttribute("checked") === false) {
+            
+            // need to commit this 311219
+            $("#calories").attr("checked", "checked");
+            $("#manufacturer").removeAttr("checked");
+            $("#cereal_name").removeAttr("checked");
+            $("#cereal_type").removeAttr("checked");
+            $("#selectOptionSearchField").empty();
+
+            $("#selectOptionSearchField").append(`<select class="custom-select" id="calories_selection" name="calories_selection" required></select>`);
+            $("#calories_selection").append('<option value="" selected disabled hidden>Choose...</option>');
+            let calories_list = ["Below 100", "Above and include 100"];
+            for (let i = 0; i < calories_list.length; i++) {
+                $("#calories_selection").append(`<option value="${calories_list[i]}">${calories_list[i]} cal</option>`);
+            }
+
+            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
+        }
+    })  
 
 })
