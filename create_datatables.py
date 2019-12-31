@@ -24,11 +24,13 @@ sql = [
 
 '''CREATE TABLE Cereals (cereal_id INTEGER AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100), manufacturer_id INTEGER, FOREIGN KEY (manufacturer_id) REFERENCES Manufacturer (manufacturer_id),
 type_id INTEGER, FOREIGN KEY (type_id) REFERENCES Type (type_id), calories INTEGER, protein INTEGER, fat INTEGER, sodium INTEGER, fiber INTEGER, carbohydrates INTEGER,
-sugars INTEGER, potassium INTEGER, vitamins INTEGER, ratings INTEGER, review_count INTEGER);''',
+sugars INTEGER, potassium INTEGER, vitamins INTEGER, ratings INTEGER);''',
 
 '''CREATE TABLE Ratings (rating_id INTEGER AUTO_INCREMENT PRIMARY KEY, ratings INTEGER, comment VARCHAR(255), user_id INTEGER, FOREIGN KEY (user_id) REFERENCES Users (user_id),
-cereal_id INTEGER, FOREIGN KEY (cereal_id) REFERENCES Cereals (cereal_id));'''
+cereal_id INTEGER, FOREIGN KEY (cereal_id) REFERENCES Cereals (cereal_id));''',
 
+'''CREATE TABLE Contribute (contribute_id INTEGER AUTO_INCREMENT PRIMARY KEY, user_id INTEGER, FOREIGN KEY (user_id) REFERENCES Users (user_id),
+manufacturer_id INTEGER, FOREIGN KEY (manufacturer_id) REFERENCES Manufacturer (manufacturer_id), cereal_id INTEGER, FOREIGN KEY (cereal_id) REFERENCES Cereals (cereal_id));'''
 
 ]
 
@@ -37,6 +39,7 @@ try:
     # try to establish the connection to the database
     try: 
         connection = pymysql.connect(host=hostname, user=username, password=password, db=db_name)
+        
     except pymysql.MySQLError as e:
         # print out the error
         print(f"Connection is not successful. Encountered error: {e}")
