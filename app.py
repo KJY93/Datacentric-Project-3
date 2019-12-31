@@ -33,10 +33,10 @@ def index():
         # Query for all the cereal items in the Cereals table
         cursor = mysql.connection.cursor()
 
-        cursor.execute(('''SELECT Cereals.name, manufacturer_description, Type.cereals_type,
+        cursor.execute(('''SELECT Cereals.name, manufacturer_description, Type.cereals_type, Cereals.calories,
                 Cereals.protein, Cereals.fat, Cereals.sodium, Cereals.fiber, Cereals.carbohydrates, Cereals.sugars,
-                Cereals.potassium, Cereals.vitamins, Cereals.ratings FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
-                Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id ORDER BY Cereals.ratings DESC'''))
+                Cereals.potassium, Cereals.vitamins FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
+                Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id ORDER BY Cereals.calories DESC'''))
 
         cereals_menu = cursor.fetchall()
 
@@ -45,7 +45,7 @@ def index():
         
         for i in range(len(cereals_menu)):
             cereal_menu_item.append(cereals_menu[i]['name'])
-
+            
         # record the number of rows in the cereals table
         cereal_record_count = len(cereals_menu)
         
@@ -214,7 +214,7 @@ def search():
     else:
         flash("Please login first.")
         return redirect(url_for('login'))
-
+    
 @app.route("/logout")
 def logout():
     if "user" in session:
