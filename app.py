@@ -192,6 +192,17 @@ def search():
                 cereal_name = request.form.get("cereal-name-input")
                 cursor.execute('''SELECT Cereals.name, Cereals.calories, Manufacturer.manufacturer_description, Type.cereals_type FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
                     Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE Cereals.name=''' + "\'" + cereal_name + "\'")
+            
+            elif selectedOption  == "calories":
+                calories_option_selection = request.form.get("calories_selection")
+                calories_consumption = int(calories_option_selection[-3:])
+                
+                if calories_option_selection == "Above and include 100":
+                    cursor.execute(f"SELECT Cereals.name, Cereals.calories, Manufacturer.manufacturer_description, Type.cereals_type FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id = Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE Cereals.calories>={calories_consumption}")
+                                   
+                elif calories_option_selection == "Below 100":
+                    cursor.execute(f"SELECT Cereals.name, Cereals.calories, Manufacturer.manufacturer_description, Type.cereals_type FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id = Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE Cereals.calories<{calories_consumption}")   
+
 
             filtered_record = cursor.fetchall()
             
