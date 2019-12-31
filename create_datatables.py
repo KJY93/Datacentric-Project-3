@@ -22,7 +22,7 @@ sql = [
 
 '''CREATE TABLE Type (type_id INTEGER AUTO_INCREMENT PRIMARY KEY, cereals_type varchar(10) NOT NULL);''', 
 
-'''CREATE TABLE Cereals (cereal_id INTEGER AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100), manufacturer_id INTEGER, FOREIGN KEY (manufacturer_id) REFERENCES Manufacturer (manufacturer_id),
+'''CREATE TABLE Cereals (cereal_id INTEGER AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL UNIQUE, manufacturer_id INTEGER, FOREIGN KEY (manufacturer_id) REFERENCES Manufacturer (manufacturer_id),
 type_id INTEGER, FOREIGN KEY (type_id) REFERENCES Type (type_id), calories INTEGER, protein INTEGER, fat INTEGER, sodium INTEGER, fiber INTEGER, carbohydrates INTEGER,
 sugars INTEGER, potassium INTEGER, vitamins INTEGER);''',
 
