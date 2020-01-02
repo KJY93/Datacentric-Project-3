@@ -3,16 +3,19 @@ import os
 import pymysql
 
 # database username
-username = 'sql12317054'
+username = '08SUJq26f2'
 
 # database host
-hostname = 'sql12.freemysqlhosting.net'
+# hostname = 'sql12.freemysqlhosting.net'
+hostname = 'remotemysql.com'
 
 # database = password
-password = 'i4HZtC2C6y'
+# password = 'i4HZtC2C6y'
+password = 'k0Khbb40Ws'
 
 # database name
-db_name = 'sql12317054'
+# db_name = 'sql12317054'
+db_name = '08SUJq26f2'
 
 # declare a list to keep the csv file
 file_list = ['users.csv', 'manufacturer.csv', 'type.csv', 'ratings.csv', 'cereals.csv', 'contribute.csv']

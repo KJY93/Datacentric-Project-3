@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %} Cereals 101 | Contribute {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div id="searchFormContainer">
+        <div class="w-50 card shadow p-3 mb-5 bg-white rounded cardContainer">
+            <div class="card-header text-center">
+                Add a cereal
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form action="/contribute" method="post" name="contributeForm">
+                            <div class="form-row">
+                                <div class="col-sm-12 mb-3">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Manufacturer</span>
+                                        </div>
+
+                                        <select class="custom-select" id="manufacturer_option_selection" name="manufacturer_option_selection" required>
+                                            <option value="" selected disabled hidden>Choose...</option>
+                                            {% for i in range(0, cereal_manufacturer_list_length) %}
+                                            <option value="{{i+1}}">
+                                                {{ cereal_manufacturer_list[i] }}</option>
+                                            {% endfor %}
+                                            <option value="Others">Others</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div id="othersOption">
+
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Cereal</span>
+                                        </div>
+                                        <input name="cereal_name" type="text" class="form-control" required>
+                                    </div>
+
+      
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Cereal Type</span>
+                                        </div>
+
+                                        <select class="custom-select" id="cereal_option_list" name="cereal_option_list" required>
+                                            <option value="" selected disabled hidden>Choose...</option>
+                                            <option value="1">Cold</option>
+                                            <option value="2">Hot</option>
+                                        </select>
+                                    </div>      
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Calories</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="calories" min="0.00" step="0.01" required>
+                                    </div>
+                            
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Protein</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="protein" min="0.00" step="0.01" required>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Fat</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="fat" min="0.00" step="0.01" required>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Sodium</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="sodium" min="0.00" step="0.01" required>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Fiber</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="fiber" min="0.00" step="0.01" required>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Carbohydrates</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="carbohydrates" min="0.00" step="0.01" required>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Sugars</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="sugars" min="0.00" step="0.01" required>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Potassium</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="potassium" min="0.00" step="0.01" required>
+                                    </div>
+                        
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Vitamins</span>
+                                        </div>
+                                        <input type="number" class="form-control"
+                                        name="vitamins" min="0.00" step="0.01" required>
+                                    </div>
+                        
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-outline-secondary">Add</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            // Based on windows size, set canvas width and height
+            let mediaQuerysize = window.matchMedia("(max-width: 575.98px)");
+
+            function cardElementDimension(e) {
+                if (e.matches) {
+                    $(".card").removeClass("w-50");
+                }
+                else {
+                    $(".card").addClass("w-50");
+                }
+            }
+
+            // Call the function at run time in order to resize the canvas element dimension
+            cardElementDimension(mediaQuerysize);
+
+            // attach listener to respond on state changes
+            mediaQuerysize.addListener(cardElementDimension);
+
+            // display and hide the input field to let user to key in the manufacturer name
+            // only shows if "others" is selected in the manufacturer dropdown list
+            $("#manufacturer_option_selection").change(function () {
+                if ($("#manufacturer_option_selection").val() === "Others") {
+                    $("#othersOption").append(`<input type="text" class="form-control" id="new_manufacturer" name="new_manufacturer" placeholder="Enter manufacturer name..." required>`); 
+                };
+
+                if ($("#manufacturer_option_selection").val() !== "Others") {
+                    $("#othersOption").empty();
+                };
+            })
+
+            // WORK IN PROGRESS!!!
+            // perform an AJAX query check before letting user submit the form
+            $("#contributeForm").submit(function(event) {
+                event.preventDefault();
+                if ($("#manufacturer_option_selection").val() === "Others") {
+                    $.get('/contributecheck', {manufacturer:$("#manufacturer_option_selection:selected").text(), cereal:$('input[name=cereal_name]').val()},
+                    function(data) {
+                        if (data.mfr_name_status) {
+                            alert("This manufacturer already exist in the database.");
+                        }
+                        else if ((data.mfr_name_status == "available") && (data.cereal_name_status == "taken")) {
+                            alert("This cereal already exist in the database.");
+                        }
+                        else if ((data.mfr_name_status == "available") && (data.cereal_name_status == "available")) {
+                            $("#contributeForm").submit();
+                        }
+                    })
+                }
+
+                else if ($("#manufacturer_option_selection").val() !== "Others") {
+                    $.get('/contributecheck', {cereal:$('input[name=cereal_name]').val()}, 
+                    function(data) {
+                        if (data.cereal_name_status == "taken") {
+                            alert("This cereal already exist in the database.");
+                        }
+                        else if (data.cereal_name_status == "available") {
+                            $("#contributeForm").submit();
+                        }
+                    })
+
+                }
+            })
+
+        })
+
+    </script>
+    {% endblock %}

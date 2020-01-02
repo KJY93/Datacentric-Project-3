@@ -18,10 +18,16 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Setting up the configurations needed to access the MySQL database in phpMyAdmin
-app.config['MYSQL_USER'] = 'sql12317054'
-app.config['MYSQL_PASSWORD'] = 'i4HZtC2C6y'
-app.config['MYSQL_HOST'] = 'sql12.freemysqlhosting.net'
-app.config['MYSQL_DB'] = 'sql12317054'
+# app.config['MYSQL_USER'] = 'sql12317054'
+# app.config['MYSQL_PASSWORD'] = 'i4HZtC2C6y'
+# app.config['MYSQL_HOST'] = 'sql12.freemysqlhosting.net'
+# app.config['MYSQL_DB'] = 'sql12317054'
+# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+app.config['MYSQL_USER'] = '08SUJq26f2'
+app.config['MYSQL_PASSWORD'] = 'k0Khbb40Ws'
+app.config['MYSQL_HOST'] = 'remotemysql.com'
+app.config['MYSQL_DB'] = '08SUJq26f2'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
@@ -68,7 +74,7 @@ def index():
         
         for j in manufacturer_category_description:
             manufacturer_category_description_array.append(j['manufacturer_description'])
-
+            
         return render_template('index.html', cereal_menu_item=cereal_menu_item, manufacturer_category_description_array=manufacturer_category_description_array, col_headers=col_headers, cereals_menu=cereals_menu, cereal_item_manufacturer_count=cereal_item_manufacturer_count, cereal_record_count=cereal_record_count)
     
     else:
@@ -214,6 +220,128 @@ def search():
     else:
         flash("Please login first.")
         return redirect(url_for('login'))
+    
+# to be commit 311219
+@app.route("/contributecheck", methods=["GET"])
+def contributecheck():
+    manufacturer = request.form.get("manufacturer_option_selection")
+    new_manufacturer_name = request.form.get("new_manufacturer")
+    cereal = request.form.get("cereal_name")
+    
+    if manufacturer == "Others":
+        cursor = mysql.connection.cursor()
+        cursor.execute('''SELECT manufacturer_description FROM Manufacturer WHERE manufacturer_description =''' + "\'" + new_manufacturer_name + "\'")     
+        manufacturer_check_result = cursor.fetchone()
+        
+        if manufacturer_check_result:
+            return jsonify({"mfr_name_status":"taken"})
+        else:
+            cursor.execute('''SELECT name FROM Cereals WHERE name=''' + "\'" + cereal + "\'")
+            cereal_check_result = cursor.fetchone()
+            
+            if cereal_check_result:
+                return jsonify({"mfr_name_status":"available", "cereal_name_status":"taken"})
+            else:
+                return jsonify({"mfr_name_status":"available", "cereal_name_status":"available"})
+    else:
+        cursor.execute('''SELECT name FROM Cereals WHERE name=''' + "\'" + cereal + "\'")
+        cereal_check_result = cursor.fetchone()            
+        if cereal_check_result:
+            return jsonify({"cereal_name_status":"taken"})
+        else:
+            return jsonify({"cereal_name_status":"available"})
+        
+        
+        
+        
+# to be commit 311219
+@app.route("/contribute", methods=["GET", "POST"])
+def add():
+    if request.method == "POST":
+        manufacturer_option_selected = request.form.get("manufacturer_option_selection")
+        cereal_name_submitted = request.form.get("cereal_name")
+        cereal_type_id = int(float(request.form.get("cereal_option_list")))
+        calories = int(float(request.form.get("calories")))
+        protein = int(float(request.form.get("protein")))
+        fat = int(float(request.form.get("fat")))
+        sodium = int(float(request.form.get("sodium")))
+        fiber = int(float(request.form.get("fiber")))
+        carbohydrates = int(float(request.form.get("carbohydrates")))
+        sugars = int(float(request.form.get("sugars")))
+        potassium = int(float(request.form.get("potassium")))
+        vitamins = int(float(request.form.get("vitamins")))
+    
+        if manufacturer_option_selected != "Others":
+            mfr_id = int(manufacturer_option_selected)
+            
+            # Insert new cereal into cereals table
+            cereal_sql_query = f"INSERT INTO Cereals (name, manufacturer_id, type_id, calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins) VALUES ('{cereal_name_submitted}', {mfr_id}, {cereal_type_id}, {calories}, {protein}, {fat}, {sodium}, {fiber}, {carbohydrates}, {sugars}, {potassium}, {vitamins})"
+            cursor = mysql.connection.cursor()
+            cursor.execute(cereal_sql_query)
+            mysql.connection.commit()
+ 
+            # Update contribute table if above is new cereal name and manufacturer are successfully added to the Cereals and Manufacturer table
+            # Get cereal_id from Cereals table
+            cereal_id_query = cursor.execute('''SELECT cereal_id FROM Cereals WHERE name =''' + "\'" + cereal_name_submitted + "\'")            
+            cereal_id = (cursor.fetchone())['cereal_id']
+            
+            contribute_sql_query = f"INSERT INTO Contribute (user_id, manufacturer_id, cereal_id) VALUES ({session['user_id']}, {mfr_id}, {cereal_id})"
+            cursor.execute(contribute_sql_query)
+            mysql.connection.commit()
+            
+            flash("Successully submitted a new manufacturer and a cereal brand to the database.")     
+            
+            return redirect(url_for('index')) 
+        
+        elif manufacturer_option_selected == "Others":
+            new_manufacturer = request.form.get("new_manufacturer")
+            
+            # create the new manufacurer in the manufacturer table first    
+            sql_query = f"INSERT INTO Manufacturer (manufacturer_description) VALUES ('{new_manufacturer}')"
+            cursor = mysql.connection.cursor()
+            cursor.execute(sql_query)
+            mysql.connection.commit()
+            
+            # Get manufacturer id from manufacturer table
+            cursor.execute('''SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description =''' + "\'" + new_manufacturer + "\'")
+
+            mfr_id = (cursor.fetchone())['manufacturer_id']
+
+            # Insert new cereal into Cereals table 
+            cereal_sql_query = f"INSERT INTO Cereals (name, manufacturer_id, type_id, calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins) VALUES ('{cereal_name_submitted}', {mfr_id}, {cereal_type_id}, {calories}, {protein}, {fat}, {sodium}, {fiber}, {carbohydrates}, {sugars}, {potassium}, {vitamins})"
+            cursor.execute(cereal_sql_query)
+            mysql.connection.commit()
+            
+            # Update contribute table if above is new cereal name and manufacturer are successfully added to the Cereals and Manufacturer table
+            # Get cereal_id from Cereals table
+            cereal_id_query = cursor.execute('''SELECT cereal_id FROM Cereals WHERE name =''' + "\'" + cereal_name_submitted + "\'")            
+            cereal_id = (cursor.fetchone())['cereal_id']
+            
+            contribute_sql_query = f"INSERT INTO Contribute (user_id, manufacturer_id, cereal_id) VALUES ({session['user_id']}, {mfr_id}, {cereal_id})"
+            cursor.execute(contribute_sql_query)
+            mysql.connection.commit()
+            
+            flash("Successully submitted a new manufacturer and a cereal brand to the database.")
+            
+            return redirect(url_for('index'))
+                           
+    else:
+        cursor = mysql.connection.cursor()
+
+        cursor.execute(('''SELECT Manufacturer.manufacturer_description FROM Manufacturer''')) 
+        
+        cereal_manufacturer = cursor.fetchall();
+        
+        # Store the cereal manufacturer into a list
+        cereal_manufacturer_list = []
+        
+        for item in range(len(cereal_manufacturer)):
+            cereal_manufacturer_list.append(cereal_manufacturer[item]['manufacturer_description'])
+    
+        # cereal manufacturer list length
+        cereal_manufacturer_list_length = len(cereal_manufacturer_list)
+    
+        return render_template("contribute.html", cereal_manufacturer_list=cereal_manufacturer_list, cereal_manufacturer_list_length=cereal_manufacturer_list_length)
     
 @app.route("/logout")
 def logout():
