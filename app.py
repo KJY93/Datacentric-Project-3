@@ -18,14 +18,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Setting up the configurations needed to access the MySQL database in phpMyAdmin
-# app.config['MYSQL_USER'] = 'sql12317054'
-# app.config['MYSQL_PASSWORD'] = 'i4HZtC2C6y'
-# app.config['MYSQL_HOST'] = 'sql12.freemysqlhosting.net'
-# app.config['MYSQL_DB'] = 'sql12317054'
-# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-app.config['MYSQL_USER'] = '08SUJq26f2'
-app.config['MYSQL_PASSWORD'] = 'k0Khbb40Ws'
+app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER")
+app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
 app.config['MYSQL_HOST'] = 'remotemysql.com'
 app.config['MYSQL_DB'] = '08SUJq26f2'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
@@ -354,4 +349,4 @@ def logout():
         return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=8080, debug=True)
