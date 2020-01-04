@@ -13,7 +13,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <form action="/contribute" method="post" name="contributeForm">
+                        <form action="/contribute" method="post" name="contributeForm" id="contributeForm">
                             <div class="form-row">
                                 <div class="col-sm-12 mb-3">
                                     <div class="input-group mb-3">
@@ -24,7 +24,7 @@
                                         <select class="custom-select" id="manufacturer_option_selection" name="manufacturer_option_selection" required>
                                             <option value="" selected disabled hidden>Choose...</option>
                                             {% for i in range(0, cereal_manufacturer_list_length) %}
-                                            <option value="{{i+1}}">
+                                            <option value="{{ cereal_manufacturer_list[i] }}">
                                                 {{ cereal_manufacturer_list[i] }}</option>
                                             {% endfor %}
                                             <option value="Others">Others</option>
@@ -143,73 +143,5 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-
-            // Based on windows size, set canvas width and height
-            let mediaQuerysize = window.matchMedia("(max-width: 575.98px)");
-
-            function cardElementDimension(e) {
-                if (e.matches) {
-                    $(".card").removeClass("w-50");
-                }
-                else {
-                    $(".card").addClass("w-50");
-                }
-            }
-
-            // Call the function at run time in order to resize the canvas element dimension
-            cardElementDimension(mediaQuerysize);
-
-            // attach listener to respond on state changes
-            mediaQuerysize.addListener(cardElementDimension);
-
-            // display and hide the input field to let user to key in the manufacturer name
-            // only shows if "others" is selected in the manufacturer dropdown list
-            $("#manufacturer_option_selection").change(function () {
-                if ($("#manufacturer_option_selection").val() === "Others") {
-                    $("#othersOption").append(`<input type="text" class="form-control" id="new_manufacturer" name="new_manufacturer" placeholder="Enter manufacturer name..." required>`); 
-                };
-
-                if ($("#manufacturer_option_selection").val() !== "Others") {
-                    $("#othersOption").empty();
-                };
-            })
-
-            // WORK IN PROGRESS!!!
-            // perform an AJAX query check before letting user submit the form
-            $("#contributeForm").submit(function(event) {
-                event.preventDefault();
-                if ($("#manufacturer_option_selection").val() === "Others") {
-                    $.get('/contributecheck', {manufacturer:$("#manufacturer_option_selection:selected").text(), cereal:$('input[name=cereal_name]').val()},
-                    function(data) {
-                        if (data.mfr_name_status) {
-                            alert("This manufacturer already exist in the database.");
-                        }
-                        else if ((data.mfr_name_status == "available") && (data.cereal_name_status == "taken")) {
-                            alert("This cereal already exist in the database.");
-                        }
-                        else if ((data.mfr_name_status == "available") && (data.cereal_name_status == "available")) {
-                            $("#contributeForm").submit();
-                        }
-                    })
-                }
-
-                else if ($("#manufacturer_option_selection").val() !== "Others") {
-                    $.get('/contributecheck', {cereal:$('input[name=cereal_name]').val()}, 
-                    function(data) {
-                        if (data.cereal_name_status == "taken") {
-                            alert("This cereal already exist in the database.");
-                        }
-                        else if (data.cereal_name_status == "available") {
-                            $("#contributeForm").submit();
-                        }
-                    })
-
-                }
-            })
-
-        })
-
-    </script>
+    <script src="../static/scripts/contribute.js"></script>
     {% endblock %}
