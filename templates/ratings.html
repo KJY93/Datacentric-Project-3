@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %} Cereals 101 | Ratings {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div id="ratingsContainer">
+        <div class="w-50 card shadow p-3 mb-5 bg-white rounded cardContainer">
+            <div class="card-header text-center">
+                Submit your ratings
+            </div>
+
+            <div class="card-body">
+
+                <p class="ratings">Cereal Name: {{ item_searched["name"] }}</p>
+                <p class="ratings">Manufacturer: {{ item_searched["manufacturer_description"] }}</p>
+                <p class="ratings">Cereals Type: {{ item_searched["cereals_type"] }}</p>
+                <p class="ratings">Calories: {{ item_searched["calories"] }}</p>
+
+                <form action="{{ url_for('ratings', cereal_id=item_searched['cereal_id']) }}" method="post" name="ratingsForm" id="ratingsForm">
+                    <input type="number" placeholder="Your ratings here (1 to 5)" class="form-control mb-3"
+                        name="user_ratings" min="0.00" step="0.01" max="5.00" required>
+
+                    <textarea class="form-control" placeholder="Your comments here..." name="user_comment" id="user_comment"
+                        rows="3" required></textarea>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-outline-secondary mt-3">Rate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../static/scripts/ratings.js"></script>
+{% endblock %}
