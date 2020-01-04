@@ -53,180 +53,23 @@
     </div>
 </div>
 
+<!-- to commit 4/1/2020 split out JS and HTML -->
 <script>
-    $(document).ready(function () {
 
-        // save all cereals item record 
-        // convert variable passed to flask template to json format and parse it to get an array
-        var cereal_menu_item_record = JSON.parse('{{ cereal_menu_item | tojson }}');
+    // cereals item 
+    var cereal_menu_item_record = JSON.parse('{{ cereal_menu_item | tojson }}');
 
-        // declare an empty variable to save all the JSON formatted data above into an array
-        var cereal_menu_item_record_array = [];
+    // manufacturers
+    let manufacturer_list_array = JSON.parse('{{ manufacturer_category_description_array | tojson }}');
 
-        for (let k = 0; k < cereal_menu_item_record.length; k++) {
-            cereal_menu_item_record_array.push(cereal_menu_item_record[k])
-        };
+    // manufacturer counts for each cereals
+    let cereal_item_manufacturer_count_array_format = JSON.parse('{{ cereal_item_manufacturer_count | tojson }}');
 
-        // save cereal list to localStorge 
-        localStorage.setItem("cereal_list", JSON.stringify(cereal_menu_item_record_array));
+    // top 3 cereals with highest calories record 
+    let top_3_cereals_item = (JSON.parse('{{ cereals_menu | tojson }}')).slice(0, 3);
 
-        // save manufacturer list to locaStorage
-        let manufacturer_list_array = JSON.parse('{{ manufacturer_category_description_array | tojson }}')
-        localStorage.setItem("manufacturer_list", JSON.stringify(manufacturer_list_array))
-
-        // Constructing the suggestion engine
-        // Code modified from https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-typeahead.php
-        var cereal_menu_item_record_array = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.whitespace,
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            local: cereal_menu_item_record_array
-        });
-
-        // Initializing the typeahead
-        $('.typeahead').typeahead({
-            hint: true,
-            highlight: true, /* Enable substring highlighting */
-            minLength: 1 /* Specify minimum characters required for showing suggestions */
-        },
-            {
-                name: 'cereals',
-                source: cereal_menu_item_record_array
-            });
-
-        // save all the manufacturer count record and convert the json format back to an array
-        let cereal_item_manufacturer_count_array_format = JSON.parse('{{ cereal_item_manufacturer_count | tojson }}');
-        let manufacturer_array = [];
-        let cereal_item_count_array = [];
-
-        // loop through the menu item count array and save the respective categories and counts to its variable
-        for (let i = 0; i < cereal_item_manufacturer_count_array_format.length; i++) {
-            manufacturer_array.push(cereal_item_manufacturer_count_array_format[i]['manufacturer_description'])
-            cereal_item_count_array.push(cereal_item_manufacturer_count_array_format[i]['count'])
-        };
-
-        // Generate random colors that are distinguishable from each other (using hsla)
-        // https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html
-        let color_code_array = [];
-
-        // Represents how many color will be generated
-        // This will be based on how many items are there in the manufacturer category
-        let color_quantity = manufacturer_array.length;
-        let hue_delta = Math.trunc(360 / color_quantity);
-
-        // set the saturation, alpha and lightness value to be constant
-        let lightness = 50;
-        let saturation = 100;
-        let alpha = 1;
-
-        for (let j = 0; j < color_quantity; j++) {
-            let hue = j * hue_delta;
-            color_code_array.push(`hsla(${hue},${saturation}%,${lightness}%,${alpha})`)
-        };
-
-        // Doughnut Chart
-        new Chart(document.getElementById("doughnut-chart"), {
-            type: 'doughnut',
-            data: {
-                labels: manufacturer_array,
-                datasets: [
-                    {
-                        label: "Cereal manufacturer category (unit)",
-                        backgroundColor: color_code_array,
-                        data: cereal_item_count_array
-                    }
-                ]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: {
-                    labels: {
-                        render: 'value',
-                        arc: true,
-                        fontColor: '#808080',
-                        fontStyle: 'bold',
-                        position: 'outside'
-                    }
-                },
-
-                title: {
-                    display: true,
-                    text: 'Cereal breakdown by manufacturer overview'
-                }
-            }
-        });
-
-        // Get top 3 cereals with highest calories
-        let cereals_menu_item = '{{ cereals_menu | tojson }}';
-        let top_3_cereals_item = (JSON.parse(cereals_menu_item)).slice(0, 3);
-
-        let cereal_item_array = [];
-        let cereal_rating_array = [];
-
-        // loop through the menu item array and save the menu items and the menu calories to an empty array
-        for (let k = 0; k < top_3_cereals_item.length; k++) {
-            cereal_item_array.push(top_3_cereals_item[k]['name'])
-            cereal_rating_array.push(top_3_cereals_item[k]['calories'])
-        };
-
-        // Bar chart to show menu with top 3 highest ratings cereal
-        new Chart(document.getElementById("bar-chart"), {
-            type: 'horizontalBar',
-            data: {
-                labels: cereal_item_array,
-                datasets: [
-                    {
-                        label: "Calories (cal)",
-                        backgroundColor: ["hsla(30, 100%, 63%, 0.3)", "hsla(180, 48%, 52%, 0.3)", "hsla(204, 82%, 57%, 0.3)"],
-                        data: cereal_rating_array
-                    }
-                ]
-            },
-            options: {
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Top 3 cereals with highest calories   '
-                },
-                scales: {
-                    xAxes: [{ ticks: { min: cereal_rating_array[2] - 30 }}],
-                    yAxes: [{ ticks: { mirror: true, fontColor: '#808080' } }]
-                }
-            }
-        });
-
-        // Trigger this typeahead event when cereal name is being looked up
-        jQuery('#autocomplete-input').on('typeahead:selected typeahead:autocompleted', function (e, datum) {
-
-            jQuery.get('/query', { item: datum },
-                function (data) {
-                    if (data.cereal === "not found") {
-                        $("#cardResultBody").html("<div class='alert alert-info' role='alert'>No results found!</div>")
-                    }
-                    else {
-                        let table_body = document.querySelector('tbody');
-                        let table_header = Object.keys(data["cereal"][0]);
-                        let table_data = ""
-                        let data_units = ["cal", "g", "g", "g", "mg", "g", "mg", "g", "%"];
-
-                        for (let d = 0; d < Object.keys(data["cereal"][0]).length; d++) {
-
-                            if ((table_header[d]).includes("_")) {
-                                // replace "_" with a spacebar
-                                var formatted_table_header = table_header[d].replace(/_/g, " ");
-                            }
-                            else {
-                                var formatted_table_header = table_header[d];
-                            }
-
-                            table_data += `<tr><td>${formatted_table_header}</td><td>${data["cereal"][0][table_header[d]]}${data_units[d]}</td></tr>`;
-                        }
-
-                        table_body.innerHTML = table_data.replace(/\"/g, "");
-                    }
-                }, 'json')
-        });
-
-    })
 </script>
+
+<script src="../static/scripts/index.js"></script>
 
 {% endblock %}
