@@ -17,12 +17,11 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Setting up the configurations needed to access the MySQL database in phpMyAdmin
-
+# Setting up the configurations needed to access the MySQL database
 app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER")
 app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
-app.config['MYSQL_HOST'] = 'remotemysql.com'
-app.config['MYSQL_DB'] = '08SUJq26f2'
+app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST")
+app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB")
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
@@ -216,22 +215,34 @@ def search():
         flash("Please login first.")
         return redirect(url_for('login'))
     
-# to be commit 311219
+# to be commit 040120
 @app.route("/contributecheck", methods=["GET"])
 def contributecheck():
-    manufacturer = request.form.get("manufacturer_option_selection")
-    new_manufacturer_name = request.form.get("new_manufacturer")
-    cereal = request.form.get("cereal_name")
     
+    # lowercase and then capitalize only the first letter of the string before perform the sql query
+    cereal = request.args.get('cereal')
+    cereal_lowercase = cereal.lower()
+    cereal_formatted = ' '.join(elem[0].upper() + elem[1:] for elem in cereal_lowercase.split())
+    
+    manufacturer = request.args.get('manufacturer') 
+    cursor = mysql.connection.cursor()
+            
     if manufacturer == "Others":
-        cursor = mysql.connection.cursor()
-        cursor.execute('''SELECT manufacturer_description FROM Manufacturer WHERE manufacturer_description =''' + "\'" + new_manufacturer_name + "\'")     
+        new_manufacturer = request.args.get('new_mfr')
+    
+        # lowercase and then capitalize only the first letter of the string before perform the sql query
+        # this is needed to ensure no duplicates names are being entered to the database
+        lower_case_new_manufacturer = new_manufacturer.lower()
+        capitalize_new_manufacturer = ' '.join(word[0].upper() + word[1:] for word in lower_case_new_manufacturer.split())
+        
+        cursor.execute('''SELECT manufacturer_description FROM Manufacturer WHERE manufacturer_description =''' + "\'" + capitalize_new_manufacturer + "\'")     
+                
         manufacturer_check_result = cursor.fetchone()
         
         if manufacturer_check_result:
             return jsonify({"mfr_name_status":"taken"})
         else:
-            cursor.execute('''SELECT name FROM Cereals WHERE name=''' + "\'" + cereal + "\'")
+            cursor.execute('''SELECT name FROM Cereals WHERE name=''' + "\'" +  cereal_formatted + "\'")
             cereal_check_result = cursor.fetchone()
             
             if cereal_check_result:
@@ -239,77 +250,88 @@ def contributecheck():
             else:
                 return jsonify({"mfr_name_status":"available", "cereal_name_status":"available"})
     else:
-        cursor.execute('''SELECT name FROM Cereals WHERE name=''' + "\'" + cereal + "\'")
+        cursor.execute('''SELECT name FROM Cereals WHERE name=''' + "\'" +  cereal_formatted + "\'")
         cereal_check_result = cursor.fetchone()            
         if cereal_check_result:
             return jsonify({"cereal_name_status":"taken"})
         else:
             return jsonify({"cereal_name_status":"available"})
         
-        
-        
-        
 # to be commit 311219
 @app.route("/contribute", methods=["GET", "POST"])
-def add():
+def contribute():
     if request.method == "POST":
         manufacturer_option_selected = request.form.get("manufacturer_option_selection")
-        cereal_name_submitted = request.form.get("cereal_name")
-        cereal_type_id = int(float(request.form.get("cereal_option_list")))
-        calories = int(float(request.form.get("calories")))
-        protein = int(float(request.form.get("protein")))
-        fat = int(float(request.form.get("fat")))
-        sodium = int(float(request.form.get("sodium")))
-        fiber = int(float(request.form.get("fiber")))
-        carbohydrates = int(float(request.form.get("carbohydrates")))
-        sugars = int(float(request.form.get("sugars")))
-        potassium = int(float(request.form.get("potassium")))
-        vitamins = int(float(request.form.get("vitamins")))
+        
+        # lowercase and then capitalize only the first letter of the string before perform the sql query
+        # this is needed to ensure consistent formatting of names are being entered to the database
+        cereal_name_submitted = request.form.get("cereal_name").lower()
+        cereal_name_formatted = ' '.join(word[0].upper() + word[1:] for word in cereal_name_submitted.split())  
+     
+        cereal_type_id = int(request.form.get("cereal_option_list"))
+        calories = round(float(request.form.get("calories")))
+        protein = round(float(request.form.get("protein")))
+        fat = round(float(request.form.get("fat")))
+        sodium = round(float(request.form.get("sodium")))
+        fiber = round(float(request.form.get("fiber")))
+        carbohydrates = round(float(request.form.get("carbohydrates")))
+        sugars = round(float(request.form.get("sugars")))
+        potassium = round(float(request.form.get("potassium")))
+        vitamins = round(float(request.form.get("vitamins")))
     
+        cursor = mysql.connection.cursor()
+        
         if manufacturer_option_selected != "Others":
-            mfr_id = int(manufacturer_option_selected)
+            # Get manufacturer id
+            cursor.execute('''SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description=''' + "\'" +  manufacturer_option_selected + "\'")
+            
+            mfr_id = cursor.fetchone()["manufacturer_id"]
             
             # Insert new cereal into cereals table
-            cereal_sql_query = f"INSERT INTO Cereals (name, manufacturer_id, type_id, calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins) VALUES ('{cereal_name_submitted}', {mfr_id}, {cereal_type_id}, {calories}, {protein}, {fat}, {sodium}, {fiber}, {carbohydrates}, {sugars}, {potassium}, {vitamins})"
-            cursor = mysql.connection.cursor()
+            cereal_sql_query = f"INSERT INTO Cereals (name, manufacturer_id, type_id, calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins) VALUES ('{cereal_name_formatted}', {mfr_id}, {cereal_type_id}, {calories}, {protein}, {fat}, {sodium}, {fiber}, {carbohydrates}, {sugars}, {potassium}, {vitamins})"
             cursor.execute(cereal_sql_query)
             mysql.connection.commit()
  
             # Update contribute table if above is new cereal name and manufacturer are successfully added to the Cereals and Manufacturer table
             # Get cereal_id from Cereals table
-            cereal_id_query = cursor.execute('''SELECT cereal_id FROM Cereals WHERE name =''' + "\'" + cereal_name_submitted + "\'")            
+            cereal_id_query = cursor.execute('''SELECT cereal_id FROM Cereals WHERE name =''' + "\'" + cereal_name_formatted + "\'")            
             cereal_id = (cursor.fetchone())['cereal_id']
             
             contribute_sql_query = f"INSERT INTO Contribute (user_id, manufacturer_id, cereal_id) VALUES ({session['user_id']}, {mfr_id}, {cereal_id})"
             cursor.execute(contribute_sql_query)
             mysql.connection.commit()
             
-            flash("Successully submitted a new manufacturer and a cereal brand to the database.")     
+            flash("Successully submitted a cereal brand to the database.")     
             
             return redirect(url_for('index')) 
         
         elif manufacturer_option_selected == "Others":
             new_manufacturer = request.form.get("new_manufacturer")
             
+            # lowercase and then capitalize only the first letter of the string before perform the sql query
+            # this is needed to ensure consistent formatting of names are being entered to the database
+            new_mfr_lowercase = new_manufacturer.lower()
+            new_mfr_formatted = ' '.join(i[0].upper() + i[1:] for i in new_mfr_lowercase.split())  
+            
             # create the new manufacurer in the manufacturer table first    
-            sql_query = f"INSERT INTO Manufacturer (manufacturer_description) VALUES ('{new_manufacturer}')"
+            sql_query = f"INSERT INTO Manufacturer (manufacturer_description) VALUES ('{new_mfr_formatted}')"
             cursor = mysql.connection.cursor()
             cursor.execute(sql_query)
             mysql.connection.commit()
             
             # Get manufacturer id from manufacturer table
-            cursor.execute('''SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description =''' + "\'" + new_manufacturer + "\'")
+            cursor.execute('''SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description =''' + "\'" + new_mfr_formatted + "\'")
 
             mfr_id = (cursor.fetchone())['manufacturer_id']
 
             # Insert new cereal into Cereals table 
-            cereal_sql_query = f"INSERT INTO Cereals (name, manufacturer_id, type_id, calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins) VALUES ('{cereal_name_submitted}', {mfr_id}, {cereal_type_id}, {calories}, {protein}, {fat}, {sodium}, {fiber}, {carbohydrates}, {sugars}, {potassium}, {vitamins})"
+            cereal_sql_query = f"INSERT INTO Cereals (name, manufacturer_id, type_id, calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins) VALUES ('{cereal_name_formatted}', {mfr_id}, {cereal_type_id}, {calories}, {protein}, {fat}, {sodium}, {fiber}, {carbohydrates}, {sugars}, {potassium}, {vitamins})"
             cursor.execute(cereal_sql_query)
             mysql.connection.commit()
             
             # Update contribute table if above is new cereal name and manufacturer are successfully added to the Cereals and Manufacturer table
             # Get cereal_id from Cereals table
-            cereal_id_query = cursor.execute('''SELECT cereal_id FROM Cereals WHERE name =''' + "\'" + cereal_name_submitted + "\'")            
+            cereal_id_query = cursor.execute('''SELECT cereal_id FROM Cereals WHERE name =''' + "\'" + cereal_name_formatted + "\'")            
             cereal_id = (cursor.fetchone())['cereal_id']
             
             contribute_sql_query = f"INSERT INTO Contribute (user_id, manufacturer_id, cereal_id) VALUES ({session['user_id']}, {mfr_id}, {cereal_id})"
@@ -318,7 +340,7 @@ def add():
             
             flash("Successully submitted a new manufacturer and a cereal brand to the database.")
             
-            return redirect(url_for('index'))
+        return redirect(url_for('index'))
                            
     else:
         cursor = mysql.connection.cursor()
