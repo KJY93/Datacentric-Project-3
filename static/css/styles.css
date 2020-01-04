@@ -24,7 +24,7 @@ body {
     margin-top: 10px;
 }
 
-#searchFormContainer {
+#searchFormContainer, #ratingsContainer {
 	display: flex;
 	justify-content: center;	
 }
@@ -54,6 +54,10 @@ body {
 
 #record {
 	margin-top: 20px;
+}
+
+.ratings {
+	text-align: center;
 }
 
 /* CSS style for autocomplete form from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=typeahead-with-local-dataset */
