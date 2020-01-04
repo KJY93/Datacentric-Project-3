@@ -24,7 +24,7 @@
                     {% for i in range(filtered_record|length) %}
                     <tr>
                         <td>{{ i + 1 }}</td>
-                        <td><a href="#">{{ filtered_record[i]["name"] }}</a></td>
+                        <td><a href="{{ url_for('ratings', cereal_id = filtered_record[i]['cereal_id']) }}">{{ filtered_record[i]["name"] }}</a></td>
                         <td>{{ filtered_record[i]["manufacturer_description"] }}</td>
                         <td>{{ filtered_record[i]["cereals_type"] }}</td>
                         <td>{{ filtered_record[i]["calories"] }}</td>
