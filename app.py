@@ -6,7 +6,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
 from flask_mysqldb import MySQL
 
-
 app = Flask(__name__)
 
 # Setting the secret key
@@ -65,10 +64,12 @@ def index():
 
         # declare an empty variable to store the manufacturers
         manufacturer_category_description_array = []
+        
+        # close the connection when finish the querying
+        cursor.close()
 
         for j in manufacturer_category_description:
-            manufacturer_category_description_array.append(
-                j['manufacturer_description'])
+            manufacturer_category_description_array.append(j['manufacturer_description'])
 
         return render_template('index.html', cereal_menu_item=cereal_menu_item, manufacturer_category_description_array=manufacturer_category_description_array, col_headers=col_headers, cereals_menu=cereals_menu, cereal_item_manufacturer_count=cereal_item_manufacturer_count, cereal_record_count=cereal_record_count)
 
@@ -161,7 +162,6 @@ def validate():
         else:
             return jsonify({"status": "available"})
 
-
 @app.route('/query', methods=["GET"])
 def query():
 
@@ -173,9 +173,11 @@ def query():
     cursor.execute('''SELECT calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins FROM Cereals WHERE name=''' + "\'" + item_selected + "\'")
 
     cereal = cursor.fetchall()
+    
+    # close the connection when finish the querying
+    cursor.close()
 
     return jsonify({"cereal": cereal})
-
 
 @app.route('/search', methods=["GET", "POST"])
 def search():
@@ -217,6 +219,9 @@ def search():
             filtered_record = cursor.fetchall()
             
             row_return = len(filtered_record)
+            
+            # close the connection when finish the querying
+            cursor.close()
 
             return render_template("list.html", row_return=row_return, filtered_record=filtered_record)
         else:
@@ -225,15 +230,13 @@ def search():
         flash("Please login first.")
         return redirect(url_for('login'))
 
-# to be commit 040120
 @app.route("/contributecheck", methods=["GET"])
 def contributecheck():
 
     # lowercase and then capitalize only the first letter of the string before perform the sql query
     cereal = request.args.get('cereal')
     cereal_lowercase = cereal.lower()
-    cereal_formatted = ' '.join(elem[0].upper() + elem[1:]
-                                for elem in cereal_lowercase.split())
+    cereal_formatted = ' '.join(elem[0].upper() + elem[1:] for elem in cereal_lowercase.split())
 
     manufacturer = request.args.get('manufacturer')
     cursor = mysql.connection.cursor()
@@ -258,6 +261,9 @@ def contributecheck():
             cursor.execute(
                 '''SELECT name FROM Cereals WHERE name=''' + "\'" + cereal_formatted + "\'")
             cereal_check_result = cursor.fetchone()
+            
+            # close the connection when finish the querying
+            cursor.close()
 
             if cereal_check_result:
                 return jsonify({"mfr_name_status": "available", "cereal_name_status": "taken"})
@@ -267,12 +273,15 @@ def contributecheck():
         cursor.execute('''SELECT name FROM Cereals WHERE name=''' +
                        "\'" + cereal_formatted + "\'")
         cereal_check_result = cursor.fetchone()
+
+        # close the connection when finish the querying
+        cursor.close()
+        
         if cereal_check_result:
             return jsonify({"cereal_name_status": "taken"})
         else:
             return jsonify({"cereal_name_status": "available"})
 
-# to be commit 311219
 @app.route("/contribute", methods=["GET", "POST"])
 def contribute():
     if request.method == "POST":
@@ -319,6 +328,9 @@ def contribute():
             contribute_sql_query = f"INSERT INTO Contribute (user_id, manufacturer_id, cereal_id) VALUES ({session['user_id']}, {mfr_id}, {cereal_id})"
             cursor.execute(contribute_sql_query)
             mysql.connection.commit()
+            
+            # close the connection when finish the querying
+            cursor.close()
 
             flash("Successully submitted a cereal brand to the database.")
 
@@ -335,7 +347,6 @@ def contribute():
 
             # create the new manufacurer in the manufacturer table first
             sql_query = f"INSERT INTO Manufacturer (manufacturer_description) VALUES ('{new_mfr_formatted}')"
-            cursor = mysql.connection.cursor()
             cursor.execute(sql_query)
             mysql.connection.commit()
 
@@ -360,8 +371,10 @@ def contribute():
             cursor.execute(contribute_sql_query)
             mysql.connection.commit()
 
-            flash(
-                "Successully submitted a new manufacturer and a cereal brand to the database.")
+            # close the connection when finish the querying
+            cursor.close()
+
+            flash("Successully submitted a new manufacturer and a cereal brand to the database.")
 
         return redirect(url_for('index'))
 
@@ -372,6 +385,9 @@ def contribute():
             ('''SELECT Manufacturer.manufacturer_description FROM Manufacturer'''))
 
         cereal_manufacturer = cursor.fetchall()
+        
+        # close the connection when finish the querying
+        cursor.close()
 
         # Store the cereal manufacturer into a list
         cereal_manufacturer_list = []
@@ -384,8 +400,7 @@ def contribute():
         cereal_manufacturer_list_length = len(cereal_manufacturer_list)
 
         return render_template("contribute.html", cereal_manufacturer_list=cereal_manufacturer_list, cereal_manufacturer_list_length=cereal_manufacturer_list_length)
-
-# to commit 040120 735pm
+    
 @app.route("/ratings/<int:cereal_id>", methods=["GET", "POST"])
 def ratings(cereal_id):
     if "user" in session:
@@ -418,20 +433,26 @@ def ratings(cereal_id):
                 ratings_query = f"INSERT INTO Ratings (ratings, comment, user_id, cereal_id) VALUES ({user_ratings}, '{user_comment_formatted}', {uid}, {cid})"                
                 cursor.execute(ratings_query)
                 mysql.connection.commit()
+                
+                # close the connection when finish the querying
+                cursor.close()
+        
                 flash("You have successfully submit a rating.")
                 return redirect(url_for('index'))    
         else:
             cursor.execute((f"SELECT Cereals.cereal_id, Cereals.name, manufacturer_description, Type.cereals_type, Cereals.calories FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id = Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE cereal_id={cereal_id}"))
             
             item_searched = cursor.fetchone()
+            
+            # close the connection when finish the querying
+            cursor.close()
 
             return render_template("ratings.html", item_searched=item_searched)
 
     else:
         flash("Please login first.")
         return redirect(url_for('login'))
-
-
+    
 @app.route("/logout")
 def logout():
     if "user" in session:
