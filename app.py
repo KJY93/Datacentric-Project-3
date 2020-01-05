@@ -453,6 +453,27 @@ def ratings(cereal_id):
         flash("Please login first.")
         return redirect(url_for('login'))
     
+@app.route('/history', methods=["GET"])
+def history():
+    if "user" in session:
+        cursor = mysql.connection.cursor()
+        # Get the cereal ratings for the logged in user
+        cursor.execute(f"SELECT Cereals.name, Cereals.cereal_id, Ratings.comment, Ratings.ratings FROM Ratings INNER JOIN Cereals ON Ratings.cereal_id = Cereals.cereal_id WHERE user_id={session['user_id']}")
+        rating_query = cursor.fetchall()
+        
+        # Get the cereal info contributed by the logged in user
+        cursor.execute(f"SELECT Cereals.name, Cereals.cereal_id, Manufacturer.manufacturer_id, Manufacturer.manufacturer_description FROM Contribute INNER JOIN Cereals ON Contribute.cereal_id = Cereals.cereal_id INNER JOIN Manufacturer ON Contribute.manufacturer_id = Manufacturer.manufacturer_id WHERE user_id={session['user_id']}")
+        
+        contribute_query = cursor.fetchall()
+        
+        # close the connection when finish the querying
+        cursor.close()
+        
+        return render_template("history.html", rating_query=rating_query, contribute_query=contribute_query)
+    else:
+        flash("Please login first.")
+        return redirect(url_for('login'))
+    
 @app.route("/logout")
 def logout():
     if "user" in session:
