@@ -575,6 +575,25 @@ def editcontribution(cereal_id):
     else:
         return render_template("error.html", message="Error message: An unknown error occured.")
     
+@app.route('/deletecontribution/<int:cereal_id>', methods=["POST"])
+def deletecontribution(cereal_id):
+    cursor = cursor = mysql.connection.cursor()
+    
+    # delete contribution from contribution table
+    contribution_delete_query = f"DELETE FROM Contribute WHERE cereal_id={cereal_id} and user_id={session['user_id']}"
+    cursor.execute(contribution_delete_query)
+    mysql.connection.commit()  
+    
+    # delete contribution in cereal table
+    delete_cereal_from_cereal_table = f"DELETE FROM Cereals WHERE cereal_id={cereal_id}"
+    cursor.execute(delete_cereal_from_cereal_table)
+    mysql.connection.commit()
+
+    cursor.close()
+    
+    flash("Successfully deleted cereal from Cereals and Contribution table.")
+    return redirect(url_for('index'))
+    
 @app.route("/logout")
 def logout():
     if "user" in session:
