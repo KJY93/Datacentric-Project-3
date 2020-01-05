@@ -24,9 +24,13 @@ body {
     margin-top: 10px;
 }
 
-#searchFormContainer, #ratingsContainer {
+#searchFormContainer, #ratingsContainer, #activityHistoryContainer {
 	display: flex;
 	justify-content: center;	
+}
+
+.editRatingButton, .editContributeButton {
+	margin-right: 10px;
 }
 
 #selectOptionSearchField, #searchButton {
