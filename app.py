@@ -474,6 +474,31 @@ def history():
         flash("Please login first.")
         return redirect(url_for('login'))
     
+@app.route('/editratings/<int:cereal_id>', methods=["POST"])
+def editratings(cereal_id):
+    cereal_ratings_update = round(float(request.form.get("user_ratings_update")), 2)
+    cereal_comments_update = request.form.get("user_comment_update")
+    
+    cursor = mysql.connection.cursor()
+    cursor.execute((f"SELECT cereal_id FROM Ratings WHERE cereal_id={cereal_id}"))
+    
+    cereal_update_query = cursor.fetchone()
+    
+    if cereal_update_query:
+        cereal_updated = f"UPDATE Ratings SET ratings={cereal_ratings_update}, comment='{cereal_comments_update}' WHERE cereal_id={cereal_id} and user_id={session['user_id']}"
+        cursor.execute(cereal_updated)
+        mysql.connection.commit()
+        
+        # close the connection when finish the querying
+        cursor.close()
+        
+        flash("Successfully updated your ratings review")
+        return redirect(url_for('index'))
+    else:
+        # close the connection
+        cursor.close()
+        return render_template("error.html", message="Error message: No ratings for this cereal is found.")
+    
 @app.route("/logout")
 def logout():
     if "user" in session:
