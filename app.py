@@ -499,6 +499,21 @@ def editratings(cereal_id):
         cursor.close()
         return render_template("error.html", message="Error message: No ratings for this cereal is found.")
     
+@app.route('/deleteratings/<int:cereal_id>', methods=["POST"])
+def deleteratings(cereal_id):
+    
+    cursor = mysql.connection.cursor()
+
+    cereal_delete_query = f"DELETE FROM Ratings WHERE cereal_id={cereal_id} and user_id={session['user_id']}"
+    cursor.execute(cereal_delete_query)
+    mysql.connection.commit()
+    
+    # close the connection when finish the querying
+    cursor.close()  
+    
+    flash("Successfully deleted your ratings review")
+    return redirect(url_for('index'))
+    
 @app.route("/logout")
 def logout():
     if "user" in session:
