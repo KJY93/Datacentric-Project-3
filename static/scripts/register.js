@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    document.querySelector('form').addEventListener('submit', function (event) {
+    $("form").submit(function(event) {
         // prevent form from submitting before validation is done
         event.preventDefault();
 
@@ -30,7 +30,7 @@ $(document).ready(function () {
                     const check_pass = check_pass_field();
 
                     if (check_pass === "true") {
-                        $("form").submit();
+                        event.currentTarget.submit();
                     }
                     else if (check_pass === "false") {
                         alert('Password must contain alphanumeric characters and special symbols(!@#$%^&*) and be 8 to 15 characters long.');
