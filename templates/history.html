@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %} Cereals 101 | History {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div id="activityHistoryContainer">
+        <div class="w-75 card shadow p-3 mb-5 bg-white rounded cardContainer">
+            <div class="card-header">
+                Choose the following category to perform an update or delete action:
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <!-- Select this option will show the user the past ratings they have made -->
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="updateDeleteRatings" name="updateDeleteOption"
+                                class="custom-control-input" value="update_delete_ratings">
+                            <label class="custom-control-label" for="updateDeleteRatings">Ratings Info</label>
+                        </div>
+
+                        <!-- Select this option will show the user the past cereals they have added to the database -->
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="updateDeleteCerealInfo" name="updateDeleteOption"
+                                class="custom-control-input" value="update_delete_cereal_info">
+                            <label class="custom-control-label" for="updateDeleteCerealInfo">Cereal Info</label>
+                        </div>
+
+                        <!-- This portion will be updated based on what options is selected from above -->
+                        <div id="updateDeleteField" class="mt-3">
+
+                        </div>
+
+                        <!-- This option is to populate the data to show for the pop up modal form based on the option selected above -->
+                        <div id="modalForm">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    // information of rating query passed from app.py
+    var rating_query = JSON.parse('{{ rating_query | tojson }}');
+
+    // information of cereal contribution query passed from app.py
+    var contribute_query = JSON.parse('{{ contribute_query | tojson}}');
+
+    // latest manufacturer list obtained from localStorage 
+    var mfr_list = JSON.parse(localStorage.getItem("manufacturer_list"));
+
+</script>
+
+<!-- Used the above declared variables and passed it to history.js file to populate data needed for this html page -->
+<script src="../static/scripts/history.js"></script>
+{% endblock %}
