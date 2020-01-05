@@ -513,6 +513,67 @@ def deleteratings(cereal_id):
     
     flash("Successfully deleted your ratings review")
     return redirect(url_for('index'))
+
+@app.route('/editcontribution/<int:cereal_id>', methods=["POST"])
+def editcontribution(cereal_id):
+    
+    cursor = mysql.connection.cursor()
+    
+    # get previous mfr_id
+    cursor.execute(f"SELECT manufacturer_id FROM Contribute WHERE cereal_id={cereal_id}")
+    previous_mfr_id = int(cursor.fetchone()['manufacturer_id'])
+    
+    # get submitted mfr_id
+    cursor.execute(f"SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description='{request.form.get('manufacturer_option_selection')}'")
+    submitted_mfr_id = int(cursor.fetchone()['manufacturer_id'])
+    
+    
+    print(request.form.get('manufacturer_option_selection'))
+    # get submitted values from form
+    cereal = request.form.get("cereal_name")
+    cereal_type = int(request.form.get("cereal_option_list"))
+    calories = round(float(request.form.get("calories")))
+    protein = round(float(request.form.get("protein")))
+    fat = round(float(request.form.get("fat")))
+    sodium = round(float(request.form.get("sodium")))
+    fiber = round(float(request.form.get("fiber")))
+    carbohydrates = round(float(request.form.get("carbohydrates")))
+    sugars = round(float(request.form.get("sugars")))
+    potassium = round(float(request.form.get("potassium")))
+    vitamins = round(float(request.form.get("vitamins")))
+    
+    # if previous mfr id is equal to the submitted mfr id, just update the cereals table
+    if previous_mfr_id == submitted_mfr_id:
+        cereal_query_update = f"UPDATE Cereals SET name='{cereal}', type_id={cereal_type}, calories={calories}, protein={protein}, fat={fat}, sodium={sodium}, fiber={fiber}, carbohydrates={carbohydrates}, sugars={sugars}, potassium={potassium}, vitamins={vitamins}  WHERE cereal_id={cereal_id}"
+        cursor.execute(cereal_query_update)
+        mysql.connection.commit()
+        
+        # close the connection when finish the querying
+        cursor.close()
+        
+        flash("Successfully update cereal info.")
+        return redirect(url_for('index'))
+    
+    # else update contribute table then cereals table
+    elif previous_mfr_id != submitted_mfr_id:
+        # update contribute table
+        print("here")
+        contribute_table_update = f"UPDATE Contribute SET manufacturer_id={submitted_mfr_id} WHERE cereal_id={cereal_id} and user_id={session['user_id']}"
+        cursor.execute(contribute_table_update)
+        mysql.connection.commit()
+        
+        cereal_query_update = f"UPDATE Cereals SET manufacturer_id={submitted_mfr_id}, name='{cereal}', type_id={cereal_type}, calories={calories}, protein={protein}, fat={fat}, sodium={sodium}, fiber={fiber}, carbohydrates={carbohydrates}, sugars={sugars}, potassium={potassium}, vitamins={vitamins}  WHERE cereal_id={cereal_id}"
+        cursor.execute(cereal_query_update)
+        mysql.connection.commit()
+        
+        # close the connection when finish the querying
+        cursor.close()
+        
+        flash("Successfully update cereal info.")
+        return redirect(url_for('index'))
+
+    else:
+        return render_template("error.html", message="Error message: An unknown error occured.")
     
 @app.route("/logout")
 def logout():
