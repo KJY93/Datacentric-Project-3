@@ -102,7 +102,10 @@ $(document).ready(function () {
 
     // loop through the top 3 cereals item record and save the cereal item and its calories to an empty array
     for (let k = 0; k < top_3_cereals_item.length; k++) {
-        cereal_item_array.push(top_3_cereals_item[k]['name'])
+        // cereal_item_array.push(top_3_cereals_item[k]['name'])
+
+        cereal_item_array.push(top_3_cereals_item[k]['manufacturer_with_cereal_name'])
+
         cereal_rating_array.push(top_3_cereals_item[k]['calories'])
     };
 
@@ -137,16 +140,18 @@ $(document).ready(function () {
 
         jQuery.get('/query', { item: datum },
             function (data) {
-                if (data.cereal === "not found") {
+                if (data["cereal"] === "not found") {
                     $("#cardResultBody").html("<div class='alert alert-info' role='alert'>No results found!</div>")
                 }
                 else {
                     let table_body = document.querySelector('tbody');
-                    let table_header = Object.keys(data["cereal"][0]);
+                    // commit 0701
+                    let table_header = Object.keys(data["cereal"]);
                     let table_data = ""
                     let data_units = ["cal", "g", "g", "g", "mg", "g", "mg", "g", "%"];
 
-                    for (let d = 0; d < Object.keys(data["cereal"][0]).length; d++) {
+                    // commit 0701
+                    for (let d = 0; d < table_header.length; d++) {
 
                         if ((table_header[d]).includes("_")) {
                             // replace "_" with a spacebar
@@ -156,7 +161,7 @@ $(document).ready(function () {
                             var formatted_table_header = table_header[d];
                         }
 
-                        table_data += `<tr><td>${formatted_table_header}</td><td>${data["cereal"][0][table_header[d]]}${data_units[d]}</td></tr>`;
+                        table_data += `<tr><td>${formatted_table_header}</td><td>${data["cereal"][table_header[d]]}${data_units[d]}</td></tr>`;
                     }
 
                     table_body.innerHTML = table_data.replace(/\"/g, "");
