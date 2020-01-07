@@ -29,12 +29,13 @@ mysql = MySQL(app)
 @app.route('/', methods=["GET", "POST"])
 def index():
     if "user" in session:
-        # Query for all the cereal items in the Cereals table
+        
         cursor = mysql.connection.cursor()
 
-        cursor.execute(('''SELECT Cereals.name, manufacturer_description, Type.cereals_type, Cereals.calories,
-                Cereals.protein, Cereals.fat, Cereals.sodium, Cereals.fiber, Cereals.carbohydrates, Cereals.sugars,
-                Cereals.potassium, Cereals.vitamins FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
+        # Query for all the cereal items in the Cereals table 
+        cursor.execute(('''SELECT Cereals.name, CONCAT(Cereals.name, ' ', '(', (Manufacturer.manufacturer_description), ')') AS manufacturer_with_cereal_name, 
+                Manufacturer.manufacturer_description, Type.cereals_type, Cereals.calories, Cereals.protein, Cereals.fat, Cereals.sodium, 
+                Cereals.fiber, Cereals.carbohydrates, Cereals.sugars, Cereals.potassium, Cereals.vitamins FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
                 Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id ORDER BY Cereals.calories DESC'''))
 
         cereals_menu = cursor.fetchall()
@@ -43,7 +44,8 @@ def index():
         cereal_menu_item = []
 
         for i in range(len(cereals_menu)):
-            cereal_menu_item.append(cereals_menu[i]['name'])
+            # cereal_menu_item.append(cereals_menu[i]['name'])
+            cereal_menu_item.append(cereals_menu[i]['manufacturer_with_cereal_name'])
 
         # record the number of rows in the cereals table
         cereal_record_count = len(cereals_menu)
@@ -85,7 +87,7 @@ def login():
         if not request.form.get("username"):
             return render_template("error.html", message="Error message: Username field is empty. Please complete all the fields before logging in.")
 
-        # Ensure password is submitted
+        # Ensure password is submitted S
         if not request.form.get("password"):
             return render_template("error.html", message="Error message: Password field is empty. Please complete all the fields before logging in.")
 
@@ -166,18 +168,35 @@ def validate():
 def query():
 
     item_selected = request.args.get('item')
+    
+    # to get the cereal name without the manufacturer as obtained from the arguments
+    # get the first index of the first (
+    get_first_opening_bracket_index = item_selected.find('(')
+    get_one_index_before_the_first_opening_bracket = get_first_opening_bracket_index - 1
+    item_selected_formatted = item_selected[slice(0, get_one_index_before_the_first_opening_bracket)]
+    
+    # get manufacturer brand
+    get_last_opening_bracket_index = item_selected.find(')')
+    get_manufacturer_brand = item_selected[slice(get_first_opening_bracket_index+1, get_last_opening_bracket_index)]
+    
+    cursor = mysql.connection.cursor()
+    
+    # get manufacturer id from Manufacturer table
+    cursor.execute(f"SELECT manufacturer_id from Manufacturer WHERE manufacturer_description='{get_manufacturer_brand}'")
+    get_mfr_id = cursor.fetchone()['manufacturer_id']
 
     # Query for all the menu items in the Menu table
-    cursor = mysql.connection.cursor()
+    cursor.execute(f"SELECT calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins FROM Cereals WHERE name='{item_selected_formatted}' and manufacturer_id={get_mfr_id}")
 
-    cursor.execute('''SELECT calories, protein, fat, sodium, fiber, carbohydrates, sugars, potassium, vitamins FROM Cereals WHERE name=''' + "\'" + item_selected + "\'")
-
-    cereal = cursor.fetchall()
+    cereal = cursor.fetchone()
     
     # close the connection when finish the querying
     cursor.close()
-
-    return jsonify({"cereal": cereal})
+    
+    if cereal:
+        return jsonify({"cereal": cereal})
+    else:
+        return jsonify({"cereal": "not found"})
 
 @app.route('/search', methods=["GET", "POST"])
 def search():
@@ -200,9 +219,25 @@ def search():
 
             elif selectedOption == "cereal_name":
                 cereal_name = request.form.get("cereal-name-input")
-                cursor.execute('''SELECT Cereals.cereal_id, Cereals.name, Cereals.calories, Manufacturer.manufacturer_description, Type.cereals_type FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id =
-                    Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE Cereals.name=''' + "\'" + cereal_name + "\'")
+                
+                # get the first index of the first (
+                get_first_opening_bracket_index = cereal_name.find('(')
+                get_one_index_before_the_first_opening_bracket = get_first_opening_bracket_index - 1
+                item_selected_formatted = cereal_name[slice(0, get_one_index_before_the_first_opening_bracket)]
+                
+                # get manufacturer brand
+                get_last_opening_bracket_index = cereal_name.find(')')
+                get_manufacturer_brand = cereal_name[slice(get_first_opening_bracket_index+1, get_last_opening_bracket_index)]
+                
+                cursor = mysql.connection.cursor()
+                
+                # get manufacturer id from Manufacturer table
+                cursor.execute(f"SELECT manufacturer_id from Manufacturer WHERE manufacturer_description='{get_manufacturer_brand}'")
+                get_mfr_id = cursor.fetchone()['manufacturer_id']
 
+                # Query for all the menu items in the Menu table
+                cursor.execute(f"SELECT Cereals.cereal_id, Cereals.name, Cereals.calories, Manufacturer.manufacturer_description, Type.cereals_type FROM Cereals INNER JOIN Manufacturer ON Cereals.manufacturer_id = Manufacturer.manufacturer_id INNER JOIN Type ON Cereals.type_id = Type.type_id WHERE Cereals.name='{item_selected_formatted}' and Cereals.manufacturer_id={get_mfr_id}")
+                
             elif selectedOption == "calories":
                 calories_option_selection = request.form.get(
                     "calories_selection")
@@ -247,31 +282,35 @@ def contributecheck():
         # lowercase and then capitalize only the first letter of the string before perform the sql query
         # this is needed to ensure no duplicates names are being entered to the database
         lower_case_new_manufacturer = new_manufacturer.lower()
-        capitalize_new_manufacturer = ' '.join(
-            word[0].upper() + word[1:] for word in lower_case_new_manufacturer.split())
+        capitalize_new_manufacturer = ' '.join(word[0].upper() + word[1:] for word in lower_case_new_manufacturer.split())
 
-        cursor.execute('''SELECT manufacturer_description FROM Manufacturer WHERE manufacturer_description =''' +
-                       "\'" + capitalize_new_manufacturer + "\'")
+        cursor.execute('''SELECT manufacturer_description FROM Manufacturer WHERE manufacturer_description =''' + "\'" + capitalize_new_manufacturer + "\'")
 
         manufacturer_check_result = cursor.fetchone()
 
         if manufacturer_check_result:
             return jsonify({"mfr_name_status": "taken"})
         else:
-            cursor.execute(
-                '''SELECT name FROM Cereals WHERE name=''' + "\'" + cereal_formatted + "\'")
+            cursor.execute('''SELECT name FROM Cereals WHERE name=''' + "\'" + cereal_formatted + "\'")
             cereal_check_result = cursor.fetchone()
             
             # close the connection when finish the querying
             cursor.close()
 
             if cereal_check_result:
+                # different brand can have the same cereal name
+                # for example nestle and post manufacturer can have the same cereal name (for example nestle brand honey stars, post brand honey stars)
                 return jsonify({"mfr_name_status": "available", "cereal_name_status": "taken"})
             else:
+                # both manufacturer brand and cereal name not taken yet
                 return jsonify({"mfr_name_status": "available", "cereal_name_status": "available"})
     else:
-        cursor.execute('''SELECT name FROM Cereals WHERE name=''' +
-                       "\'" + cereal_formatted + "\'")
+        # get manufacturer id
+        cursor.execute('''SELECT manufacturer_description, manufacturer_id FROM Manufacturer WHERE manufacturer_description =''' + "\'" + manufacturer + "\'")
+        manufacturer_id_check = (cursor.fetchone())['manufacturer_id']
+
+        # check whether the particular manufacturer already has the particular cereal brand in the database
+        cursor.execute(f"SELECT name FROM Cereals WHERE name='{cereal_formatted}' and manufacturer_id={manufacturer_id_check}")
         cereal_check_result = cursor.fetchone()
 
         # close the connection when finish the querying
@@ -285,8 +324,7 @@ def contributecheck():
 @app.route("/contribute", methods=["GET", "POST"])
 def contribute():
     if request.method == "POST":
-        manufacturer_option_selected = request.form.get(
-            "manufacturer_option_selection")
+        manufacturer_option_selected = request.form.get("manufacturer_option_selection")
 
         # lowercase and then capitalize only the first letter of the string before perform the sql query
         # this is needed to ensure consistent formatting of names are being entered to the database
@@ -309,8 +347,7 @@ def contribute():
 
         if manufacturer_option_selected != "Others":
             # Get manufacturer id
-            cursor.execute('''SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description=''' +
-                           "\'" + manufacturer_option_selected + "\'")
+            cursor.execute('''SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description=''' + "\'" + manufacturer_option_selected + "\'")
 
             mfr_id = cursor.fetchone()["manufacturer_id"]
 
@@ -321,8 +358,8 @@ def contribute():
 
             # Update contribute table if above is new cereal name and manufacturer are successfully added to the Cereals and Manufacturer table
             # Get cereal_id from Cereals table
-            cereal_id_query = cursor.execute(
-                '''SELECT cereal_id FROM Cereals WHERE name =''' + "\'" + cereal_name_formatted + "\'")
+            
+            cereal_id_query = cursor.execute(f"SELECT cereal_id FROM Cereals WHERE name='{cereal_name_formatted}' and manufacturer_id={mfr_id}")
             cereal_id = (cursor.fetchone())['cereal_id']
 
             contribute_sql_query = f"INSERT INTO Contribute (user_id, manufacturer_id, cereal_id) VALUES ({session['user_id']}, {mfr_id}, {cereal_id})"
@@ -342,8 +379,7 @@ def contribute():
             # lowercase and then capitalize only the first letter of the string before perform the sql query
             # this is needed to ensure consistent formatting of names are being entered to the database
             new_mfr_lowercase = new_manufacturer.lower()
-            new_mfr_formatted = ' '.join(
-                i[0].upper() + i[1:] for i in new_mfr_lowercase.split())
+            new_mfr_formatted = ' '.join(i[0].upper() + i[1:] for i in new_mfr_lowercase.split())
 
             # create the new manufacurer in the manufacturer table first
             sql_query = f"INSERT INTO Manufacturer (manufacturer_description) VALUES ('{new_mfr_formatted}')"
@@ -351,8 +387,7 @@ def contribute():
             mysql.connection.commit()
 
             # Get manufacturer id from manufacturer table
-            cursor.execute(
-                '''SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description =''' + "\'" + new_mfr_formatted + "\'")
+            cursor.execute('''SELECT manufacturer_id FROM Manufacturer WHERE manufacturer_description =''' + "\'" + new_mfr_formatted + "\'")
 
             mfr_id = (cursor.fetchone())['manufacturer_id']
 
@@ -363,8 +398,8 @@ def contribute():
 
             # Update contribute table if above is new cereal name and manufacturer are successfully added to the Cereals and Manufacturer table
             # Get cereal_id from Cereals table
-            cereal_id_query = cursor.execute(
-                '''SELECT cereal_id FROM Cereals WHERE name =''' + "\'" + cereal_name_formatted + "\'")
+            
+            cereal_id_query = cursor.execute(f"SELECT cereal_id FROM Cereals WHERE name='{cereal_name_formatted}' and manufacturer_id={mfr_id}")
             cereal_id = (cursor.fetchone())['cereal_id']
 
             contribute_sql_query = f"INSERT INTO Contribute (user_id, manufacturer_id, cereal_id) VALUES ({session['user_id']}, {mfr_id}, {cereal_id})"
@@ -381,8 +416,7 @@ def contribute():
     else:
         cursor = mysql.connection.cursor()
 
-        cursor.execute(
-            ('''SELECT Manufacturer.manufacturer_description FROM Manufacturer'''))
+        cursor.execute(('''SELECT Manufacturer.manufacturer_description FROM Manufacturer'''))
 
         cereal_manufacturer = cursor.fetchall()
         
@@ -393,8 +427,7 @@ def contribute():
         cereal_manufacturer_list = []
 
         for item in range(len(cereal_manufacturer)):
-            cereal_manufacturer_list.append(
-                cereal_manufacturer[item]['manufacturer_description'])
+            cereal_manufacturer_list.append(cereal_manufacturer[item]['manufacturer_description'])
 
         # cereal manufacturer list length
         cereal_manufacturer_list_length = len(cereal_manufacturer_list)
@@ -409,12 +442,11 @@ def ratings(cereal_id):
         if request.method == "POST":
             user_comment = request.form.get("user_comment")
             
-            # format the user comment (use "\\ to escape quotes to prevent sql injection")
+            # format the user comment (use ’ to replace "" or ' to escape quotes to prevent sql injection)
             if user_comment.find("\'"):
                 user_comment_formatted = user_comment.replace("\'", "’")
             elif user_comment.find("\""):
                 user_comment_formatted = user_comment.replace("\"", "’")  
-            
             
             user_ratings = round(float(request.form.get("user_ratings")), 2)
             uid = session["user_id"]
@@ -603,7 +635,6 @@ def logout():
     else:
         flash("Please login first.")
         return redirect(url_for('login'))
-
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
