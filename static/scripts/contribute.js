@@ -41,11 +41,8 @@ $(document).ready(function () {
                 if (data.mfr_name_status == "taken") {
                     alert("This manufacturer already exist in the database.");
                 }
-                else if ((data.mfr_name_status == "available") && (data.cereal_name_status == "taken")) {
-                    alert("This cereal already exist in the database.");
-                }
-                else if ((data.mfr_name_status == "available") && (data.cereal_name_status == "available")) {
-                    // submit to commit
+                // allow differerent brand with same cereal name and different brand with different cereal name to be submitted as a new cereal item to the Cereals table
+                else if (((data.mfr_name_status == "available") && (data.cereal_name_status == "taken")) || ((data.mfr_name_status == "available") && (data.cereal_name_status == "available"))) {
                     event.currentTarget.submit();
                 }
             })
