@@ -56,14 +56,16 @@ $(document).ready(function () {
                                     <div class="modal-body">
                                         <form>
                                             <div class="form-group">
-                                                <input type="number" placeholder="Your ratings here (1 to 5)"
-                                                    class="form-control mb-3" name="user_ratings_update" min="0.00"
+                                                <label for="user_ratings_update">Ratings:</label>
+                                                <input type="number" 
+                                                    class="form-control mb-3" name="user_ratings_update" min="0.00" id="user_ratings_update"
                                                     step="0.01" max="5.00" value="${rating_query[i]['ratings']}" required>
                                             </div>
 
                                             <div class="form-group">
-                                                <textarea class="form-control" placeholder="Your comments here..."
-                                                    name="user_comment_update" rows="3"
+                                                <label for="user_comment_update">Comment:</label>
+                                                <textarea class="form-control" 
+                                                    name="user_comment_update" rows="3" id="user_comment_update"
                                                     required>${rating_query[i]['comment']}</textarea>
                                             </div>
 
