@@ -540,11 +540,15 @@ def history():
         cursor = mysql.connection.cursor()
         
         # Get the cereal ratings that has been submitted by the logged in user
+        
+        
+        # to commit 0901 add all cereals items pending work on hist update
         cursor.execute(f"SELECT Cereals.name, Cereals.cereal_id, Ratings.comment, Ratings.ratings FROM Ratings INNER JOIN Cereals ON Ratings.cereal_id = Cereals.cereal_id WHERE user_id={session['user_id']}")
         rating_query = cursor.fetchall()
 
         # Get the cereal info contributed by the logged in user
-        cursor.execute(f"SELECT Cereals.name, Cereals.cereal_id, Manufacturer.manufacturer_id, Manufacturer.manufacturer_description FROM Contribute INNER JOIN Cereals ON Contribute.cereal_id = Cereals.cereal_id INNER JOIN Manufacturer ON Contribute.manufacturer_id = Manufacturer.manufacturer_id WHERE user_id={session['user_id']}")
+        cursor.execute(f"SELECT Cereals.name, Cereals.type_id, Cereals.cereal_id, Manufacturer.manufacturer_id, Cereals.calories, Cereals.protein, Cereals.fat, Cereals.sodium, \
+            Cereals.fiber, Cereals.carbohydrates, Cereals.sugars, Cereals.potassium, Cereals.vitamins, Manufacturer.manufacturer_description FROM Contribute INNER JOIN Cereals ON Contribute.cereal_id = Cereals.cereal_id INNER JOIN Manufacturer ON Contribute.manufacturer_id = Manufacturer.manufacturer_id WHERE user_id={session['user_id']}")
 
         contribute_query = cursor.fetchall()
 
