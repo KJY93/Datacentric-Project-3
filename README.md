@@ -39,7 +39,7 @@ At the login page, existing user will need to login before they can access the i
 
 Logged out features are only allowed for users which are currently logged in.
 
-Once users are logged in, they will be redirect to the landing page, which comprise of the navbar at the uppermost of the web application. The navbar contains link to the search, contribute, history and logout page.
+Once users are logged in, they will be redirect to the landing page, which comprise of the navbar at the uppermost part of the web application. The navbar contains link to the search, contribute, history and logout page.
 
 On the index page, users will be provided with an overview of the number of current records in the database, an overview of the cereal brands by manufacturer, a barchart comparing the top 3 cereals with the highest calories and an autocomplete search form that allows user to query for the nutritional information for a particular cereals.
 
@@ -55,23 +55,24 @@ Clicking on the logout button will logged the user out and clear the session rel
 
 
 ### c. ER diagram
-ER diagram was used for the database design. There are 5 tables that has been identified with this ER diagram. The 5 tables and their relationships between each other are as below:
+ER diagram was used for the database design. There are 5 tables that has been identified during the database design stage. The 5 tables and their relationships between each other are as below:
 Note:
 - PK: primary key
 - FK: foreign key
 
-Tables: Cereals, Manufacturer, Type, Contribute, Users
+a. Tables: Cereals, Manufacturer, Type, Contribute, Users
 
-Keys:
+b. Keys:
 Cereals: cereal_id (PK), manufacturer_id (FK), type_id (FK)
 Manufacturer: manufacturer_id (PK)
 Type: type_id (PK)
 Contribute: contribute_id (PK), user_id (FK), manufacturer_id (FK), cereal_id (FK)
 Users: user_id (PK), name (FK), password (FK)
 
-Entity Relationship (ER) diagram:
+c. Entity Relationship (ER) diagram:
 
 ![ER diagram](https://www.lucidchart.com/publicSegments/view/7f769810-9a51-4ab5-b2c1-6051bbddc304/image.jpeg)
+
 
 
 ## Project Skeleton
@@ -87,7 +88,7 @@ Entity Relationship (ER) diagram:
 - Users are able to view their own previous ratings and cereal contributions.
 
 ### b. Features to be implemented in the future
-For the future development of this cereal nutritional information web application, I would like to include features that will allow users to upload images of the cereal brands, brief description of the cereal brands and also features to allow user to follow and share their favourite cereals with each other.
+For the future development of this cereal nutritional information web application, I would like to include features that will allow users to upload images of the cereal brands, brief description of the cereal brands and also features to allow user to follow and share their favourite cereals with their followers.
 
 ## Project Surface
 
@@ -141,19 +142,25 @@ to register with the username that they have key in and a message will be popped
 ## Bugs Discovered
 No bugs found.
 
-## Scripts to create datatables and import datasets to MySQL database
-create_datatables.py - a Python script written to create all the tables needed in the MySQL database
+## File Structure and How to use
+add how to sign up / login
+briefly describe all files
 
-import_datasets.py - a Python script written to automatically import all the datasets from the csv file to the MySQL database.
 
-## How to use
+
+
 
 
 ## Deployment
-### a. Heroku Deployment
+### a. Setting up MySQL (ClearDB) with Heroku
+1. Installing ClearDB in Git Bash using ```heroku addons:create cleardb:ignite```
+2. Datatables in the database were created using the create_datatables.py file
+3. Datasets were imported automatically from the csv file using import_datasets.py file
+
+### b. Heroku Deployment
 1. Sign up for an account at [Heroku](https://www.heroku.com/).
 2. Download Heroku CLI at [Heroku](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) website.
-3. Install the dowloaded Heroku CLI from Step 2
+3. Install the dowloaded Heroku CLI from Step 2.
 4. Open up Git Bash terminal. Cd to the location that you have your project in. Then, in the Git Bash Terminal, login to Heroku by typing ```heroku login```. A login page will be popped up to allow you to login to Heroku.
 5. Open up another Git Bash terminal. Create a new app using ```heroku create <app_name>```.
 6. In Git Bash, check whether the new remotes has been successfully added using ```git remote -v```.
@@ -164,16 +171,30 @@ import_datasets.py - a Python script written to automatically import all the dat
 * ```git add .```
 * ```git commit -m "<Commit Message>"```
 * ```git push heroku master```
-11. In Heroku, set up your key and value needed for the project. For this project, the database url, MySQL username and password has been configured.
-
-### b. Setting up MySQL (ClearDB) with Heroku
-1. Installing ClearDB in Git Bash using ```heroku addons:create cleardb:ignite```
-
-
-
-
+11. In Heroku, set up your key and value needed for the project. For this project, the database url, MySQL username, database, host and password has been configured under the Settings Tab.
 
 ### b. GitHub Deployment
+This project is deployed at GitHub pages. The deployment steps are as follow:
+1. Under the Settings Tab, go to the GitHub Pages section.
+2. Under the GitHub pages section, select the Source to be Master Branch.
+
+
+### Acknowledgements:
+1. Twitter typeahead.js: 
+   Source code adapated from to implement the autocomplete search feature in the search form - https://github.com/twitter/typeahead.js
+
+2. Font Awesome:
+   Icons from Font Awesome were used to style the edit and delete button for the update / delete ratings and cereal contribution form - https://fontawesome.com/
+
+3. Fonts: 
+   Font used is from https://fonts.google.com/
+
+4. Icons8:
+   Logo from favicon is used as the logo for the tab browser of this web application. - https://icons8.com/
+
+5. ChartJS plugin is used to display the labelling on the doughnut chart - https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js
+
+Note: This is for educational purpose only and not for commercial use.
 
 session object
 modal form edit 
