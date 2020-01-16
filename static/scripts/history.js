@@ -280,11 +280,13 @@ $(document).ready(function () {
                     function cerealTypeCheck() {
                         if(`${contribute_query[j]['type_id']}` == 1) {
                             
-                            $("#cold").attr('selected', "selected");
+                            // $("#cold").attr('selected', "selected");
+                            $("#cold").attr('selected', true);
 
                         } else {
 
-                            $("#hot").attr('selected', "selected");
+                            // $("#hot").attr('selected', "selected");
+                            $("#hot").attr('selected', true);
                         }
 
                     } cerealTypeCheck()
@@ -306,7 +308,8 @@ $(document).ready(function () {
                     // display it in the edit form directly
                     for (c=1; c < $("#manufacturer_option_selection option").length; c++) {
                         if (mfr === mfr_list_check[c]['value']) {
-                            $(`#${c}`).attr('selected', 'selected');
+                            // $(`#${c}`).attr('selected', 'selected');
+                            $(`#${c}`).attr('selected', true);
                         }
                     }
                     
