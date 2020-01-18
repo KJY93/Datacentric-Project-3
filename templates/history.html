@@ -45,19 +45,22 @@
     </div>
 </div>
 
-<script>
+{% endblock %}
 
-    // information of rating query passed from app.py
-    var rating_query = JSON.parse('{{ rating_query | tojson }}');
+{% block script %}
+    <script>
 
-    // information of cereal contribution query passed from app.py
-    var contribute_query = JSON.parse('{{ contribute_query | tojson}}');
+        // information of rating query passed from app.py
+        var rating_query = JSON.parse('{{ rating_query | tojson }}');
 
-    // latest manufacturer list obtained from localStorage 
-    var mfr_list = JSON.parse(localStorage.getItem("manufacturer_list"));
+        // information of cereal contribution query passed from app.py
+        var contribute_query = JSON.parse('{{ contribute_query | tojson}}');
 
-</script>
+        // latest manufacturer list obtained from localStorage 
+        var mfr_list = JSON.parse(localStorage.getItem("manufacturer_list"));
 
-<!-- Used the above declared variables and passed it to history.js file to populate data needed for this html page -->
-<script src="../static/scripts/history.js"></script>
+    </script>
+
+    <!-- Used the above declared variables and passed it to history.js file to populate data needed for this html page -->
+    <script src="../static/scripts/history.js"></script>
 {% endblock %}
