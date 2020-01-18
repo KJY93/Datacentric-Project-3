@@ -97,8 +97,14 @@
     </header>
     {% endif %}
     
-    {% block content %}
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block script %}
     {% endblock %}
+
 </body>
 
 </html>
