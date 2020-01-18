@@ -38,11 +38,13 @@
 
     </div>
 
-	<script>
-		$(document).ready( function () {
-            $.fn.DataTable.ext.pager.numbers_length =5;
-		    $("#dtBasicExample").DataTable();
-		} );
-    </script>
+{% endblock %}
 
+{% block script %}
+    <script>
+        $(document).ready( function () {
+            $.fn.DataTable.ext.pager.numbers_length =5;
+            $("#dtBasicExample").DataTable();
+        } );
+    </script>
 {% endblock %}
