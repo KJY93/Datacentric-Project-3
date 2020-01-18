@@ -53,23 +53,25 @@
     </div>
 </div>
 
-<!-- to commit 4/1/2020 split out JS and HTML -->
-<script>
 
-    // cereals item 
-    var cereal_menu_item_record = JSON.parse('{{ cereal_menu_item | tojson }}');
+{% endblock %}
 
-    // manufacturers
-    let manufacturer_list_array = JSON.parse('{{ manufacturer_category_description_array | tojson }}');
+{% block script %}
+    <script>
 
-    // manufacturer counts for each cereals
-    let cereal_item_manufacturer_count_array_format = JSON.parse('{{ cereal_item_manufacturer_count | tojson }}');
+        // cereals item 
+        var cereal_menu_item_record = JSON.parse('{{ cereal_menu_item | tojson }}');
 
-    // top 3 cereals with highest calories record 
-    let top_3_cereals_item = (JSON.parse('{{ cereals_menu | tojson }}')).slice(0, 3);
+        // manufacturers
+        let manufacturer_list_array = JSON.parse('{{ manufacturer_category_description_array | tojson }}');
 
-</script>
+        // manufacturer counts for each cereals
+        let cereal_item_manufacturer_count_array_format = JSON.parse('{{ cereal_item_manufacturer_count | tojson }}');
 
-<script src="../static/scripts/index.js"></script>
+        // top 3 cereals with highest calories record 
+        let top_3_cereals_item = (JSON.parse('{{ cereals_menu | tojson }}')).slice(0, 3);
 
+    </script>
+
+    <script src="../static/scripts/index.js"></script>
 {% endblock %}
