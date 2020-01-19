@@ -204,56 +204,56 @@ $(document).ready(function () {
 
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Calories</span>
+                                                    <span class="input-group-text">Calories (cal)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="calories" min="0.00" step="0.01" value=${contribute_query[j]['calories']} required>
                                             </div>
 
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Protein</span>
+                                                    <span class="input-group-text">Protein (g)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="protein" min="0.00" step="0.01" value=${contribute_query[j]['protein']} required>
                                             </div>
 
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Fat</span>
+                                                    <span class="input-group-text">Fat (g)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="fat" min="0.00" step="0.01" value=${contribute_query[j]['fat']} required>
                                             </div>
 
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Sodium</span>
+                                                    <span class="input-group-text">Sodium (mg)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="sodium" min="0.00" step="0.01" value=${contribute_query[j]['sodium']} required>
                                             </div>
 
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Fiber</span>
+                                                    <span class="input-group-text">Fiber (g)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="fiber" min="0.00" step="0.01" value=${contribute_query[j]['fiber']} required>
                                             </div>
 
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Carbohydrates</span>
+                                                    <span class="input-group-text">Carbohydrates (g)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="carbohydrates" min="0.00" step="0.01" value=${contribute_query[j]['carbohydrates']} required>
                                             </div>
 
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Sugars</span>
+                                                    <span class="input-group-text">Sugars (g)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="sugars" min="0.00" step="0.01" value=${contribute_query[j]['sugars']} required>
                                             </div>
 
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Potassium</span>
+                                                    <span class="input-group-text">Potassium (g)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="potassium" min="0.00" step="0.01" value=${contribute_query[j]['potassium']} required>
                                             </div>
@@ -261,7 +261,7 @@ $(document).ready(function () {
                                             
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Vitamins</span>
+                                                    <span class="input-group-text">Vitamins (%)</span>
                                                 </div>
                                                 <input type="number" class="form-control" name="vitamins" min="0.00" step="0.01" value=${contribute_query[j]['vitamins']} required>
                                             </div>
