@@ -17,4 +17,4 @@ $(document).ready(function () {
 
     // attach listener to respond on state changes
     mediaQuerysize.addListener(cardElementDimension);
-})
+});
