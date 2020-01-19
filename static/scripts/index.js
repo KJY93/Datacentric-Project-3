@@ -5,8 +5,8 @@ $(document).ready(function () {
 
     // loop through all the cereal record and save it in an array
     for (let k = 0; k < cereal_menu_item_record.length; k++) {
-        cereal_menu_item_record_array.push(cereal_menu_item_record[k])
-    };
+        cereal_menu_item_record_array.push(cereal_menu_item_record[k]);
+    }
 
     // save cereal list to localStorage so that it could be retrieved later on
     localStorage.setItem("cereal_list", JSON.stringify(cereal_menu_item_record_array));
@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     // Constructing the suggestion engine for input search
     // Code modified from https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-typeahead.php
-    var cereal_menu_item_record_array = new Bloodhound({
+    var cereal_menu_item_record_autocomplete_array = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.whitespace,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: cereal_menu_item_record_array
@@ -30,7 +30,7 @@ $(document).ready(function () {
     },
     {
         name: 'cereals',
-        source: cereal_menu_item_record_array
+        source: cereal_menu_item_record_autocomplete_array
     });
 
     // declare an empty array to save all the JSON formatted manufacturer and cereal count data
@@ -40,9 +40,9 @@ $(document).ready(function () {
     // loop through the cereal item manufacturer count record and save the manufacturer and 
     // the cereal item to an array
     for (let i = 0; i < cereal_item_manufacturer_count_array_format.length; i++) {
-        manufacturer_array.push(cereal_item_manufacturer_count_array_format[i]['manufacturer_description'])
-        cereal_item_count_array.push(cereal_item_manufacturer_count_array_format[i]['count'])
-    };
+        manufacturer_array.push(cereal_item_manufacturer_count_array_format[i]['manufacturer_description']);
+        cereal_item_count_array.push(cereal_item_manufacturer_count_array_format[i]['count']);
+    }
 
     // Generate random colors that are distinguishable from each other (using hsla)
     // https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html
@@ -60,7 +60,7 @@ $(document).ready(function () {
 
     for (let j = 0; j < color_quantity; j++) {
         let hue = j * hue_delta;
-        color_code_array.push(`hsla(${hue},${saturation}%,${lightness}%,${alpha})`)
+        color_code_array.push(`hsla(${hue},${saturation}%,${lightness}%,${alpha})`);
     };
 
     // Overview of cereals by manufacturer in the database
@@ -104,10 +104,10 @@ $(document).ready(function () {
     for (let k = 0; k < top_3_cereals_item.length; k++) {
         // cereal_item_array.push(top_3_cereals_item[k]['name'])
 
-        cereal_item_array.push(top_3_cereals_item[k]['manufacturer_with_cereal_name'])
+        cereal_item_array.push(top_3_cereals_item[k]['manufacturer_with_cereal_name']);
 
-        cereal_rating_array.push(top_3_cereals_item[k]['calories'])
-    };
+        cereal_rating_array.push(top_3_cereals_item[k]['calories']);
+    }
 
     // Bar chart to show menu with top 3 highest ratings cereal
     new Chart(document.getElementById("bar-chart"), {
@@ -141,13 +141,13 @@ $(document).ready(function () {
         jQuery.get('/query', { item: datum },
             function (data) {
                 if (data["cereal"] === "not found") {
-                    $("#cardResultBody").html("<div class='alert alert-info' role='alert'>No results found!</div>")
+                    $("#cardResultBody").html("<div class='alert alert-info' role='alert'>No results found!</div>");
                 }
                 else {
                     let table_body = document.querySelector('tbody');
                     // commit 0701
                     let table_header = Object.keys(data["cereal"]);
-                    let table_data = ""
+                    let table_data = "";
                     let data_units = ["cal", "g", "g", "g", "mg", "g", "mg", "g", "%"];
 
                     // commit 0701
@@ -166,7 +166,7 @@ $(document).ready(function () {
 
                     table_body.innerHTML = table_data.replace(/\"/g, "");
                 }
-            }, 'json')
+            }, 'json');
     });
 
-})
+});
