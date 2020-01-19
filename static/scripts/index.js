@@ -61,7 +61,7 @@ $(document).ready(function () {
     for (let j = 0; j < color_quantity; j++) {
         let hue = j * hue_delta;
         color_code_array.push(`hsla(${hue},${saturation}%,${lightness}%,${alpha})`);
-    };
+    }
 
     // Overview of cereals by manufacturer in the database
     // Doughnut Chart
