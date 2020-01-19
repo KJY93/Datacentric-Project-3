@@ -303,8 +303,14 @@ def contributecheck():
     # if the Others option is selected
     if manufacturer == "Others":
         # get the name of the new manufacturer submitted
-        new_manufacturer = request.args.get('new_mfr')
-
+        new_manufacturer_from_form = request.args.get('new_mfr')
+        
+        # format the user comment (use ’ to replace "" or ' to prevent sql injection)
+        if new_manufacturer_from_form.find("\'"):
+            new_manufacturer = new_manufacturer_from_form.replace("\'", "’")
+        elif new_manufacturer_from_form.find("\""):
+            new_manufacturer = new_manufacturer_from_form.replace("\"", "’")
+            
         # lowercase and then capitalize only the first letter of the string before perform the sql query
         lower_case_new_manufacturer = new_manufacturer.lower()
         capitalize_new_manufacturer = ' '.join(word[0].upper() + word[1:] for word in lower_case_new_manufacturer.split())
@@ -409,9 +415,14 @@ def contribute():
 
             return redirect(url_for('index'))
 
-        # existing manufacturer is selected
         elif manufacturer_option_selected == "Others":
-            new_manufacturer = request.form.get("new_manufacturer")
+            new_manufacturer_from_form = request.form.get("new_manufacturer")
+            
+            # format the user comment (use ’ to replace "" or ' to prevent sql injection)
+            if new_manufacturer_from_form.find("\'"):
+                new_manufacturer = new_manufacturer_from_form.replace("\'", "’")
+            elif new_manufacturer_from_form.find("\""):
+                new_manufacturer = new_manufacturer_from_form.replace("\"", "’")
 
             # lowercase and then capitalize only the first letter of the string before perform the sql query
             new_mfr_lowercase = new_manufacturer.lower()
