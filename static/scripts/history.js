@@ -82,7 +82,7 @@ $(document).ready(function () {
 
                     $("form").attr("action", `/editratings/${cereal_id_formatted}`);
                     $(".ratingsModal").modal('show');
-                })
+                });
             }
 
 
@@ -119,11 +119,11 @@ $(document).ready(function () {
 
                 $("form").attr("action", `/deleteratings/${delete_cereal_id}`);
                 $(".ratingsModal").modal('show');
-            })
+            });
 
         }
 
-    })
+    });
 
     
     $("#updateDeleteCerealInfo").click(function () {
