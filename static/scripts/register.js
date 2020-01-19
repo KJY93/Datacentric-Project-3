@@ -27,6 +27,7 @@ $(document).ready(function () {
                     }
 
                     // call the check_pass_field function to validate if password fulfill the password combination criteria
+
                     const check_pass = check_pass_field();
 
                     if (check_pass === "true") {
@@ -56,9 +57,10 @@ $(document).ready(function () {
                     else if (password_validity === false) {
                         return "false";
                     }
-                    else if ((document.querySelector('input[name="password"]').value) !== (document.querySelector('input[name="repeat_password"]').value)) {
-                        return "not equal";
-                    }
+                }
+                else if ((document.querySelector('input[name="password"]').value) !== (document.querySelector('input[name="repeat_password"]').value)) {
+
+                    return "not equal";
                 }
             }
         }
