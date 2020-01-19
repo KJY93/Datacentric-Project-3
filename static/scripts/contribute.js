@@ -23,14 +23,13 @@ $(document).ready(function () {
     $("#manufacturer_option_selection").change(function () {
         if ($("#manufacturer_option_selection").val() === "Others") {
             $("#othersOption").append(`<input type="text" class="form-control" id="new_manufacturer" name="new_manufacturer" placeholder="Enter manufacturer name..." required>`); 
-        };
+        }
 
         if ($("#manufacturer_option_selection").val() !== "Others") {
             $("#othersOption").empty();
-        };
-    })
+        }
+    });
 
-    // WORK IN PROGRESS!!!
     // perform an AJAX query check before letting user submit the form
     $("#contributeForm").submit(function(event) {
         event.preventDefault();
@@ -45,7 +44,7 @@ $(document).ready(function () {
                 else if (((data.mfr_name_status == "available") && (data.cereal_name_status == "taken")) || ((data.mfr_name_status == "available") && (data.cereal_name_status == "available"))) {
                     event.currentTarget.submit();
                 }
-            })
+            });
         }
 
         else if ($("#manufacturer_option_selection").val() !== "Others") {
@@ -58,9 +57,9 @@ $(document).ready(function () {
                     // submit to commit
                     event.currentTarget.submit();
                 }
-            })
+            });
 
         }
-    })
+    });
 
-})
+});
