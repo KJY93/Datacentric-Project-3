@@ -105,7 +105,7 @@ $(document).ready(function () {
                                             Are you sure you want to delete this review ratings?
                                         </div>
 
-                                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
+                                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Delete</button>
 
                                     </form>
                                 </div>
@@ -291,7 +291,7 @@ $(document).ready(function () {
 
                     } cerealTypeCheck()
 
-                    // get manufacturer name and cereal id
+                    // get manufacturer name and cereal id (Koko Krunch(Nestle))
                     var first_bracket_contribute_cereal_id = ($(this).val()).indexOf("(");
 
                     // cereal id
@@ -339,7 +339,7 @@ $(document).ready(function () {
                                             Are you sure you want to delete this cereal contribution?
                                         </div>
 
-                                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
+                                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Delete</button>
 
                                     </form>
                                 </div>
