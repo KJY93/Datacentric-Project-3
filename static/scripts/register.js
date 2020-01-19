@@ -13,18 +13,18 @@ $(document).ready(function () {
                 }
                 // Username field cannot be empty
                 else if (data.status === "") {
-                    alert("Username field is empty!")
+                    alert("Username field is empty!");
                 }
                 // Username is already taken
                 else if (data.status === "taken") {
-                    alert("Username is already taken!")
+                    alert("Username is already taken!");
                 }
                 // Username is available
                 else if (data.status === "available") {
                     // Check whether is password field empty
                     if ((!document.querySelector('input[name="password"]').value) || (!document.querySelector('input[name="repeat_password"]').value)) {
                         alert('Password field is empty!');
-                    };
+                    }
 
                     // call the check_pass_field function to validate if password fulfill the password combination criteria
                     const check_pass = check_pass_field();
@@ -39,7 +39,7 @@ $(document).ready(function () {
                         alert('Password field(s) do not match!');
                     }
                 }
-            }, 'json')
+            }, 'json');
         
         // function to check password combination
         function check_pass_field() {
@@ -69,6 +69,6 @@ $(document).ready(function () {
             return regex.test(param1);
         }
 
-    })
+    });
 
-})
+});
