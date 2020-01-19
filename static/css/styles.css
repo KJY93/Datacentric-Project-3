@@ -1,6 +1,6 @@
 body {
     font-family: 'Slackey', cursive, sans-serif;
-    font-size: 0.9em;
+	font-size: 0.9em;
 }
 
 #navbar-brand-logo {
@@ -62,6 +62,10 @@ body {
 
 .ratings {
 	text-align: center;
+}
+
+#passwordHelpBlock {
+	margin-top: 16px;
 }
 
 /* CSS style for autocomplete form from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=typeahead-with-local-dataset */
