@@ -5,8 +5,8 @@
 This project focuses on the development of a web application that allows user to look up for nutritional information for a particular cereal, rate for their favourite cereals, contribute nutritional information of new cereals to the database and also to update / delete cereals ratings or nutritional information of a particular cereal they have submitted to the database previously. 
 
 ## Demo
-a. Heroku Link: [Click Here](https://kjy-cereal-share.herokuapp.com/)
-b. Screencast Link: [Click Here](https://www.screencast.com/t/MFqgdgxx)
+* Heroku Link: [Click Here](https://kjy-cereal-share.herokuapp.com/)
+* Screencast Link: [Click Here](https://www.screencast.com/t/MFqgdgxx)
 
 ## Personal Touch
 - Added login / logout and register function in the web application
@@ -110,6 +110,8 @@ Design Choices:
 12. Python was used as the backend to write up the different routes to handle the different request method
 13. Flask-MySQLdb was used to connect Flask with MySQL
 14. LucidChart was used to tool up the ER diagram for the database design - https://www.lucidchart.com/
+15. W3C Markup was used to check the markup validity of HTML code - https://validator.w3.org/
+16. JSHint was used to check check on the JS code - https://jshint.com/
 
 ## Testing (Manual)
 ### Responsiveness
