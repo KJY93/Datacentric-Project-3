@@ -38,9 +38,9 @@ $(document).ready(function () {
                 $("#manufacturer_selection").append(`<option value="${manufacturer_list[i]}">${manufacturer_list[i]}</option>`);
             }
 
-            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
+            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`);
         }
-    })
+    });
 
     // if cereal type is selected
     $("#cereal_type").click(function () {
@@ -59,9 +59,9 @@ $(document).ready(function () {
                 $("#cereal_type_selection").append(`<option value="${cereal_type_list[i]}">${cereal_type_list[i]}</option>`);
             }
 
-            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
+            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`);
         }
-    })
+    });
 
     // if cereal name is selected
     $("#cereal_name").click(function () {
@@ -96,9 +96,9 @@ $(document).ready(function () {
                 source: cereal_array
             });
 
-            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
+            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`);
         }
-    })
+    });
 
     // if calories is selected
     $("#calories").click(function () {
@@ -118,8 +118,8 @@ $(document).ready(function () {
                 $("#calories_selection").append(`<option value="${calories_list[i]}">${calories_list[i]} cal</option>`);
             }
 
-            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`)
+            $("#selectOptionSearchField").append(`<button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>`);
         }
-    })  
+    });
 
-})
+});
