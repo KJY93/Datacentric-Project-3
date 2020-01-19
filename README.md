@@ -5,8 +5,8 @@
 This project focuses on the development of a web application that allows user to look up for nutritional information for a particular cereal, rate for their favourite cereals, contribute nutritional information of new cereals to the database and also to update / delete cereals ratings or nutritional information of a particular cereal they have submitted to the database previously. 
 
 ## Demo
-*Heroku Link: [Click Here](https://kjy-cereal-share.herokuapp.com/)
-*Screencast Link: [Click Here](https://www.screencast.com/t/MFqgdgxx)
+a. Heroku Link: [Click Here](https://kjy-cereal-share.herokuapp.com/)
+b. Screencast Link: [Click Here](https://www.screencast.com/t/MFqgdgxx)
 
 ## Personal Touch
 - Added login / logout and register function in the web application
