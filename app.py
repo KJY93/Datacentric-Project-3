@@ -584,7 +584,7 @@ def editratings(cereal_id):
         cursor.close()
 
         flash("Successfully updated your ratings review")
-        return redirect(url_for('index'))
+        return redirect(url_for('history'))
     
     # else let the user know the ratings for that particular cereal is not found
     else:
@@ -605,7 +605,7 @@ def deleteratings(cereal_id):
     cursor.close()
 
     flash("Successfully deleted your ratings review")
-    return redirect(url_for('index'))
+    return redirect(url_for('history'))
 
 @app.route('/editcontribution/<int:cereal_id>', methods=["POST"])
 def editcontribution(cereal_id):
@@ -663,7 +663,7 @@ def editcontribution(cereal_id):
         cursor.close()
 
         flash("Successfully update cereal info.")
-        return redirect(url_for('index'))
+        return redirect(url_for('history'))
 
     else:
         return render_template("error.html", message="Error message: An unknown error occured.")
@@ -685,7 +685,7 @@ def deletecontribution(cereal_id):
     cursor.close()
 
     flash("Successfully deleted cereal from Cereals and Contribution table.")
-    return redirect(url_for('index'))
+    return redirect(url_for('history'))
 
 @app.route("/logout")
 def logout():
