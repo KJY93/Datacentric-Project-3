@@ -5,8 +5,8 @@
 This project focuses on the development of a web application that allows user to look up for nutritional information for a particular cereal, rate for their favourite cereals, contribute nutritional information of new cereals to the database and also to update / delete cereals ratings or nutritional information of a particular cereal they have submitted to the database previously. 
 
 ## Demo
-Heroku Link: [Click Here](https://kjy-cereal-share.herokuapp.com/)
-Screencast Link: [Click Here](https://www.screencast.com/t/MFqgdgxx)
+*Heroku Link: [Click Here](https://kjy-cereal-share.herokuapp.com/)
+*Screencast Link: [Click Here](https://www.screencast.com/t/MFqgdgxx)
 
 ## Personal Touch
 - Added login / logout and register function in the web application
@@ -85,7 +85,7 @@ i. Users are able to view their own previous cereals ratings and cereal contribu
 a. For the future development of this cereal nutritional information web application, I would like to include the following features:
    * Allow user to upload images for different brand of cereals
    * Allow user to have followers
-   * ALlow user to share their favourite cereals with their followers
+   * Allow user to share their favourite cereals with their followers
    * Implement the return to previous page button
 
 ## Project Surface
@@ -146,7 +146,7 @@ The files used in this web application are briefly described as below:
 6. static folder contains 3 sub folders, namely static, images and scripts. Static folder contains the external CSS file while images and scripts folder contains the images and external JavaScript files used in this web application respectively
 7. requirements.txt - the text files that contains all the packages needed to run this web application
 
-## How to Login and Sign Up For An Account
+## How to Login and Sign Up For An Account For the Web Application
 a. New User
 1. New user will need to signup for an account at the registration page before using the web application
 2. New user will need to provide their own username. It the username is already taken, an alert message will appear to notify them to choose another username.
@@ -216,11 +216,11 @@ On Windows: ```venv\Scripts\activate```
 6. Set the enviroment variables needed to run this web application. First, right click on ```My Computer```. Then right click on ```Properties```. On the left hand side of the menu bar, click on ```Advanced system settings```. Under the ```System Variables``` section, click on the ```New``` button. In the pop up dialog box, key in the ```Variable Name``` and ```Variable Value``` field. The environment variables needed to be setup would be the database name, database host, database password and database username.
 Note: For the variable name, you are free to choose a variable name of your choice:
 
-An example of the enviroment variables key values pair would be as follow:
-a. MYSQL_HOST(variable name) will be: us-cdbr-iron-east-02.cleardb.net (variable value)
-b. MYSQL_USER(variable name) will be: B80f8d428xxxxx(variable value)
-c. MYSQL_PASSWORD(variable name) will be: F48exxxx(variable value)
-d. MYSQL_DB will(variable name) be: heroku_58632fb6debxxxx(variable value)
+    An example of the enviroment variables key values pair would be as follow:
+    a. MYSQL_HOST(variable name) will be: us-cdbr-iron-east-02.cleardb.net (variable value)
+    b. MYSQL_USER(variable name) will be: B80f8d428xxxxx(variable value)
+    c. MYSQL_PASSWORD(variable name) will be: F48exxxx(variable value)
+    d. MYSQL_DB will(variable name) be: heroku_58632fb6debxxxx(variable value)
 
 7. Run the application using the following command:
 ```python app.py```
